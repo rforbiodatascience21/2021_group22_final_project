@@ -7,4 +7,4 @@ library("tidyverse")
 
 
 # Load data ---------------------------------------------------------------
-my_data_raw <- read_tsv(file = "data/_raw/my_raw_data.tsv")
+my_data_raw <- read_tsv(file = "data/data_raw.s001.csv")
