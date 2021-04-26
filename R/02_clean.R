@@ -7,28 +7,20 @@ library("tidyverse")
 library("magrittr")
 
 # Load data ---------------------------------------------------------------
-#Problem: the dataset has multiple headers
-#Solution: leave second explanatory header out of dataset but keep as dictionary
-
-#load only header
-my_data_header <- read_tsv(file = "data/01_my_data.tsv", n_max = 0) %>%
-  names()
-#my_data_header
-
-#load dataset except for the two first rows (headers) and then insert first row as header
-my_data <- read_tsv(file = "data/01_my_data.tsv", skip = 2, col_names = my_data_header)
-#my_data
-
-#save headers as key value pairs in dictionary
-headers_dict <- read_tsv(file = "data/01_my_data.tsv", n_max = 1) %>%
-  pivot_longer(everything(), names_to = "variable_name", values_to ="variable_description")
-headers_dict
+my_data_counts <- read_tsv(file = "data/01_my_data_counts.tsv")
+my_data_samples <- read_tsv(file = "data/01_my_data_samples.tsv")
+my_data_counts
 
 # Wrangle data ------------------------------------------------------------
-#dim(my_data)
-my_data_clean <- distinct(my_data) %>% 
-  drop_na() 
-dim(my_data_clean)
+
+
+my_data_counts_wide <- rename(my_data_counts, genes = X1)
+my_data_counts_wide
+
+my_data_counts_wide <- my_data_counts_wide %>%
+  pivot_longer(!genes, names_to = "experiment", values_to = "expression") %>%
+  pivot_wider(names_from = "genes", values_from = "expression")
+my_data_counts_wide
 
 
 
