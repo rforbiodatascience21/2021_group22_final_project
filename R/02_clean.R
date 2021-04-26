@@ -21,8 +21,8 @@ my_data <- read_tsv(file = "data/01_my_data.tsv", skip = 2, col_names = my_data_
 
 #save headers as key value pairs in dictionary
 headers_dict <- read_tsv(file = "data/01_my_data.tsv", n_max = 1) %>%
-  gather(variable_name, variable_description)
-#headers_dict
+  pivot_longer(everything(), names_to = "variable_name", values_to ="variable_description")
+headers_dict
 
 # Wrangle data ------------------------------------------------------------
 #dim(my_data)
