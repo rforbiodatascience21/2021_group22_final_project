@@ -8,10 +8,13 @@ library("readxl")
 
 
 # Load data ---------------------------------------------------------------
-my_data_raw <- read_xls("data/_raw/pone.0207943.s001.xls")
-#my_data_raw
+my_data_raw_counts <- read_csv("data/_raw/counts.csv")
+my_data_raw_samples <- read_csv("data/_raw/samples.csv")
 
 
 # Write data
-write_tsv(x = my_data_raw,
-          file = "data/01_my_data.tsv")
+write_tsv(x = my_data_raw_counts,
+          file = "data/01_my_data_counts.tsv")
+
+write_tsv(x = my_data_raw_samples,
+          file = "data/01_my_data_samples.tsv")
