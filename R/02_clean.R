@@ -4,7 +4,6 @@ rm(list = ls())
 
 # Load libraries ----------------------------------------------------------
 library("tidyverse")
-library("magrittr")
 
 # Load data ---------------------------------------------------------------
 my_data_counts <- read_tsv(file = "data/01_my_data_counts.tsv")
