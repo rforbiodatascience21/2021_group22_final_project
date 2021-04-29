@@ -1,0 +1,22 @@
+---
+title: "Final Project: SARS-CoV-2 proetin expression"
+output:
+  ioslides_presentation:
+    widescreen: true
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Overallaim of project
+
+## Project overview and structure
+
+insert picture of structure
+
+## Data cleaning
+
+
+
