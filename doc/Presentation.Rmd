@@ -1,5 +1,5 @@
 ---
-title: "Final Project: SARS-CoV-2 proetin expression"
+title: "Final Project: SARS-CoV-2 protein expression"
 output:
   ioslides_presentation:
     widescreen: true
@@ -10,13 +10,22 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Overallaim of project
+## Overall aim of project
 
 ## Project overview and structure
 
 insert picture of structure
 
+## Dataset origin
+
 ## Data cleaning
 
+## Data augmentation
+
+## Exploratory data analysis
+
+## Modelling
+
+## Making a Shiny app
 
 
