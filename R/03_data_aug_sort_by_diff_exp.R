@@ -35,4 +35,4 @@ data_sorted <- data_mean %>% relocate(all_of(sort3))
 
 # Write data
 write_tsv(x = data_sorted,
-          file = "data/03_data_aug_sort_by_diff_exp.tsv")
+          file = "data/03_data_aug_sorted.tsv")
