@@ -15,15 +15,31 @@ normalized_data <- data_clean %>%
   group_by(experiment) %>% 
   mutate(total_counts = sum(Counts),
          normalized_counts = (6000000/total_counts)*Counts, 
-         time_as_numeric = as.numeric(str_extract(time, "\\d+")))
-
+         time_as_numeric = as.numeric(str_extract(time, "\\d+"))) %>% 
+  ungroup() 
 
 write_tsv(x = normalized_data,
           file = "data/03_normalized_counts_and_raw_counts.tsv")  
   
 
+# Now calculating FC: 
+
+data_FC_calculation <- normalized_data %>% select(c(-time_as_numeric,-Counts,-total_counts)) %>% 
+  group_by(treatment,time,Genes) %>% 
+  mutate(mean_over_replicates = mean(normalized_counts)) %>% 
+  select(treatment,time,mean_over_replicates) %>% 
+  distinct() %>% 
+  pivot_wider(names_from = treatment,values_from = mean_over_replicates) %>% 
+  mutate(Fold_Change = Virus/Control)
+  
+  
+  
+  
+
 # Then take mean across of each set of replicates
 # Finally change time variable to numeric
+
+
 
 data_mean <- data_clean %>%
   select(-replicate) %>%
