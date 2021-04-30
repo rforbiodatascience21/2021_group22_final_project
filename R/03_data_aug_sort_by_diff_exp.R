@@ -14,7 +14,8 @@ normalized_data <- data_clean %>%
                values_to = "Counts") %>% 
   group_by(experiment) %>% 
   mutate(total_counts = sum(Counts),
-         normalized_counts = Counts/total_counts)
+         normalized_counts = (6000000/total_counts)*Counts, 
+         time_as_numeric = as.numeric(str_extract(time, "\\d+")))
 
 
 write_tsv(x = normalized_data,
