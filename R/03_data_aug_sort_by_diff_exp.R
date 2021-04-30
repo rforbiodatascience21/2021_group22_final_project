@@ -1,15 +1,30 @@
 library("tidyverse")
 library("forcats")
 
-# load clean data
-data_clean <- read_tsv(file = "data/02_my_data_clean.tsv")
+# load clean data and Move metadata variables to first columns
+data_clean <- read_tsv(file = "data/02_my_data_clean.tsv") %>% 
+  relocate(c(treatment, time, replicate), .after = experiment)
 
 
-# Move metadata variables to first columns
 # Then take mean across of each set of replicates
 # Finally change time variable to numeric
+normalized_data <- data_clean %>% 
+  pivot_longer(cols = c(-treatment, -time,-replicate,-experiment),
+               names_to = "Genes",
+               values_to = "Counts") %>% 
+  group_by(experiment) %>% 
+  mutate(total_counts = sum(Counts),
+         normalized_counts = Counts/total_counts)
+
+
+write_tsv(x = normalized_data,
+          file = "data/3_normalized_counts_and_raw_counts.tsv")  
+  
+
+# Then take mean across of each set of replicates
+# Finally change time variable to numeric
+
 data_mean <- data_clean %>%
-  relocate(c(treatment, time, replicate), .after = experiment) %>%
   select(-replicate) %>%
   group_by(treatment, time) %>%
   summarise_if(is.numeric, mean, na.rm = TRUE) %>%
