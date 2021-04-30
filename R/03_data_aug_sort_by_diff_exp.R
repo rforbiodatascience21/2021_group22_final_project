@@ -18,7 +18,7 @@ normalized_data <- data_clean %>%
 
 
 write_tsv(x = normalized_data,
-          file = "data/3_normalized_counts_and_raw_counts.tsv")  
+          file = "data/03_normalized_counts_and_raw_counts.tsv")  
   
 
 # Then take mean across of each set of replicates
