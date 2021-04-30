@@ -8,18 +8,28 @@ data_clean <- read_tsv(file = "data/02_my_data_clean.tsv")
 # Move metadata variables to first columns
 # Then take mean across of each set of replicates
 # Finally change time variable to numeric
-data_mean <- data_clean %>% relocate(c(treatment, time, replicate), .after = experiment) %>%
+data_mean <- data_clean %>%
+  relocate(c(treatment, time, replicate), .after = experiment) %>%
   select(-replicate) %>%
   group_by(treatment, time) %>%
   summarise_if(is.numeric, mean, na.rm = TRUE) %>%
   mutate(time = as.numeric(str_extract(time, "\\d+")))
 
+
+
 # Log2 transform all gene expression variables
-data_mean_log2 <- data_mean %>% mutate_at(vars(-c(treatment, time)), log2)
+# I think maybe you misunderstood - is log fold change not the log of the fold change? 
+# not the fold change of the logs...
+
+data_mean_log2 <- data_mean %>%
+  mutate_at(vars(-c(treatment, time)), log2)
 
 # Group by time to calculate the difference between virus and control expression for each time-point
 # Move time variable to rownames
-data_mean_log2_diff <- data_mean_log2 %>% group_by(time) %>%
+
+
+data_mean_log2_diff <- data_mean_log2 %>% 
+  group_by(time) %>%
   summarise_if(is.numeric, diff) %>%
   column_to_rownames(var = "time")
 
