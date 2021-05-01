@@ -51,6 +51,24 @@ bojkova_means_wide <- bojkova_means %>%
 ggplot(data = bojkova_clean, mapping = aes(x = time, y = AARSD1)) +
   geom_point()
 
+# Trying models -------------------------------------------------------------
+# Subset a number of proteins. Random ?
+set.seed(934485)
+corona_data_long_nested = corona_data_long_nested %>%
+  sample_n(100)
+
+# Plot control vs corona-infected? Average over 3 replicates?
+# 4 different times - 2 hours, 6 hours, 10 hours, 24 hours
+
+#PCA analysis
+my_pca <- data %>% prcomp(center = TRUE, scale. = TRUE)
+
+#tidy (using broom)
+my_pca %>% tidy()
+
+#augment (broom)
+my_pca %>% augment()
+
 
 
 
