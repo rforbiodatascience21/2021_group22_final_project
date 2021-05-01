@@ -45,30 +45,36 @@ bojkova_means <- bojkova_long %>%
 bojkova_means_wide <- bojkova_means %>%
   pivot_wider(names_from = "genes", values_from = "average_expression")
 
+# ----------------------------
+# Logfold changes
+bojkova_log <- bojkova_means %>%
+  group_by(genes, time) %>%
+  summarise(log2_expr_level = diff(log2(average_expression)))
+
 
 # Trying plots ---------------------------------------------------------------
 # Visualizing one gene
 ggplot(data = bojkova_clean, mapping = aes(x = time, y = AARSD1)) +
   geom_point()
 
+# Visualizing all genes and their logfold changes
+ggplot(data = bojkova_clean, mapping = aes(x = time, y = AARSD1)) +
+  geom_point()
+
 # Trying models -------------------------------------------------------------
-# Subset a number of proteins. Random ?
+# PCA
+# Converting to long nested data
+bojkova_log_nested <- bojkova_log %>%
+  group_by(genes) %>%
+  nest %>% 
+  ungroup
+
+#Select random genes
 set.seed(934485)
-corona_data_long_nested = corona_data_long_nested %>%
+bojkova_log_nested = bojkova_log_nested %>%
   sample_n(100)
 
-# Plot control vs corona-infected? Average over 3 replicates?
-# 4 different times - 2 hours, 6 hours, 10 hours, 24 hours
-
-#PCA analysis
-my_pca <- data %>% prcomp(center = TRUE, scale. = TRUE)
-
-#tidy (using broom)
-my_pca %>% tidy()
-
-#augment (broom)
-my_pca %>% augment()
-
-
-
-
+bojkova_log_nested  = bojkova_log_nested  %>%
+  mutate(mdl = map(data, ~glm(time ~ log2_expr_level,
+                              data = .x)))
+## NB: NEED TO REMOVE "h" in TIME!!!
