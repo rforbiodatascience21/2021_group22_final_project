@@ -10,8 +10,6 @@ my_data_counts <- read_tsv(file = "data/01_my_data_counts.tsv")
 my_data_samples <- read_tsv(file = "data/01_my_data_samples.tsv")
 
 
-my_data_samples
-
 # Wrangle data ------------------------------------------------------------
 
 #Counts
@@ -22,11 +20,12 @@ my_data_counts_wide <- my_data_counts %>%
 
 
 #Samples
-my_data_samples <- rename(my_data_samples, experiment = X1) %>%
+my_data_samples <- my_data_samples %>%
+  rename(experiment = X1) %>%
   select(experiment, treatment, time, replicate)
 my_data_samples
 
-my_data_clean <- inner_join(my_data_counts_wide, my_data_samples, by="experiment") %>% 
+my_data_clean <- full_join(my_data_counts_wide, my_data_samples, by="experiment") %>% 
   mutate(experiment = str_replace_all(experiment,
                                       c("\\dh$", "[ ]"),
                                       c("\\dh$" = "2h_1",
@@ -35,7 +34,7 @@ my_data_clean <- inner_join(my_data_counts_wide, my_data_samples, by="experiment
                                       c("[ ]"),
                                       c("[ ]" = "_")))
 dim(my_data_clean)
-
+head(my_data_clean)
 # Write data --------------------------------------------------------------
 write_tsv(x = my_data_clean,
           file = "data/02_my_data_clean.tsv")
