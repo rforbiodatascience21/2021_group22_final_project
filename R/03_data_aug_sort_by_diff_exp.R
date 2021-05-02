@@ -5,34 +5,36 @@ library("forcats")
 data_clean <- read_tsv(file = "data/02_my_data_clean.tsv") %>% 
   relocate(c(treatment, time, replicate), .after = experiment)
 
-
+head(data_clean)
 # Then take mean across of each set of replicates
 # Finally change time variable to numeric
 normalized_data <- data_clean %>% 
   pivot_longer(cols = c(-treatment, -time,-replicate,-experiment),
-               names_to = "Genes",
-               values_to = "Counts") %>% 
+               names_to = "genes",
+               values_to = "counts") %>% 
   group_by(experiment) %>% 
-  mutate(total_counts = sum(Counts),
-         normalized_counts = (6000000/total_counts)*Counts, 
+  mutate(total_counts = sum(counts),
+         normalized_counts = (6000000/total_counts)*counts, 
          time_as_numeric = as.numeric(str_extract(time, "\\d+"))) %>% 
   ungroup() 
 
+head(normalized_data)
+
 write_tsv(x = normalized_data,
           file = "data/03_normalized_counts_and_raw_counts.tsv")  
-  
+
+
 
 # Now calculating FC: 
 
-data_FC_calculation <- normalized_data %>% select(c(-time_as_numeric,-Counts,-total_counts)) %>% 
-  group_by(treatment,time,Genes) %>% 
+data_FC_calculation <- normalized_data %>% select(c(-time_as_numeric,-counts,-total_counts)) %>% 
+  group_by(treatment,time,genes) %>% 
   mutate(mean_over_replicates = mean(normalized_counts)) %>% 
   select(treatment,time,mean_over_replicates) %>% 
   distinct() %>% 
   pivot_wider(names_from = treatment,values_from = mean_over_replicates) %>% 
-  mutate(Fold_Change = Virus/Control)
-  
-  
+  mutate(fold_change = Virus/Control)
+
   
   
 
