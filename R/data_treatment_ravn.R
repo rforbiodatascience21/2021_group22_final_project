@@ -63,8 +63,6 @@ ggplot(data = bojkova_clean, mapping = aes(x = time, y = AARSD1)) +
   geom_point()
 
 # Trying models -------------------------------------------------------------
-# PCA
-
 # Converting time to numeric to be able to model
 bojkova_log2 <- bojkova_log %>%
   mutate(time = as.numeric(time))
@@ -127,6 +125,7 @@ pca_fit %>%
   labs(title = "PCA coordinate plot", color = "Outcome", x = "fittedPC1",
        y = "fittedPC2") 
 ## Does not work
+## Does it makes sense to reduce dimensions when we have already reduced by log
 
 # ---------------------------------------
 # Manhattan plot of 100 random genes
