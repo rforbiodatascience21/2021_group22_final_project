@@ -77,6 +77,8 @@ sort3 <- prepend(sort2, c(1,2))
 # Sort the unmodified mean data according to the key
 data_sorted <- data_mean %>% relocate(all_of(sort3))
 
+data_sorted
+
 # Write data
 write_tsv(x = data_sorted,
           file = "data/03_data_aug_sorted.tsv")

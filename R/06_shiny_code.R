@@ -2,15 +2,17 @@ library(shiny)
 library(shinythemes)
 
 #Load data
-data <- read_tsv("data/03_data_aug_sorted.tsv")
+data <- read_tsv("../data/03_normalized_counts_and_raw_counts.tsv")
+data
 
 # Define UI
 ui <- fluidPage(theme = shinytheme("yeti"),
-                titlePanel("Gene expression in coronavirus patient compared to control"),
+                titlePanel("Gene expression x hours after infection with coronavirus compared to control"),
+                
                 sidebarPanel(
                   selectInput("genes", "Gene:",
-                                choices = c("ALL"))
-                  ),
+                              choices = c("genes"))
+                ),
                 mainPanel('Boxplot', plotOutput("myplot"))
                 
                 
@@ -22,7 +24,10 @@ ui <- fluidPage(theme = shinytheme("yeti"),
 server <- function(input, output) {
   
   output$myplot <- renderPlot({
-    boxplot(data ~ get(input$genes), data = "data")
+    
+    
+    boxplot((data$genes), data = "data")
+    
   })
 } # server
 
