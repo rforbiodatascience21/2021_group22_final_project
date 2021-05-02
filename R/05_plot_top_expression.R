@@ -16,7 +16,8 @@ ggplot(data = data_sorted_long, aes(factor(gene, level = order_names), count, co
   geom_point() +
   theme(axis.text.x = element_text(angle = -45, vjust = -0.6, hjust=0.4)) +
   xlab("Top genes (by differential expression)") +
-  ylab("log(count)")
+  ylab("log(count)") +
   scale_y_log10()
 
 ggsave(path = "results", filename = paste("diffexpGenes_top", as.character(num_genes), ".png", sep=""))
+
