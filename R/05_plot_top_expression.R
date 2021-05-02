@@ -15,6 +15,8 @@ order_names <- data_sorted_long %>% ungroup() %>% slice_head(n=num_genes) %>% pu
 ggplot(data = data_sorted_long, aes(factor(gene, level = order_names), count, color = time, shape=treatment)) +
   geom_point() +
   theme(axis.text.x = element_text(angle = -45, vjust = -0.6, hjust=0.4)) +
+  xlab("Top genes (by differential expression)") +
+  ylab("log(count)")
   scale_y_log10()
 
-#  aes(x = fct_reorder(gene, order_names))
+ggsave(path = "results", filename = paste("diffexpGenes_top", as.character(num_genes), ".png", sep=""))
