@@ -21,3 +21,19 @@ ggplot(data = data_sorted_long, aes(factor(gene, level = order_names), count, co
 
 ggsave(path = "results", filename = paste("diffexpGenes_top", as.character(num_genes), ".png", sep=""))
 
+
+gene_num <- 1
+gene_name <- order_names[gene_num]
+
+gene_plot_data <- data_sorted_long %>% filter(gene == gene_name)
+
+ggplot(data = gene_plot_data, aes(time, count, color = treatment, shape = treatment)) +
+  geom_point(aes(size = 1.5, alpha = 0.85)) +
+  scale_y_log10() +
+  theme_minimal() +
+  ylab("log(count)") +
+  scale_x_discrete(limits=c(2, 6, 10, 24)) +
+  scale_alpha(guide = 'none') + scale_size(guide = 'none')
+  
+
+
