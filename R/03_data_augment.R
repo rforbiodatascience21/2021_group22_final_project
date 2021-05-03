@@ -5,7 +5,7 @@ rm(list = ls())
 library("tidyverse")
 
 # Load data ---------------------------------------------------------------
-my_data_clean <- read_tsv(file = "data/02_my_data_clean.tsv")
+data_clean <- read_tsv(file = "data/02_my_data_clean.tsv")
 
 # Wrangle data ------------------------------------------------------------
 # Take mean across of each set of replicates, change time variable to numeric
@@ -44,12 +44,14 @@ data_mean_log2 <- data_mean %>%
 # Move time variable to rownames
 data_mean_log2_diff <- data_mean_log2 %>% 
   group_by(time) %>%
-  summarise_if(is.numeric, diff) %>%
+  summarise_if(is.numeric, diff) 
+
+data_mean_log2_diff_2 <- data_mean_log2_diff %>% 
   column_to_rownames(var = "time")
 
 # Extract order of highest differential expression based on 2, 6, 10 or 24 hours
 rownum <- 4   # 4 = 24h
-sort <- data_mean_log2_diff %>%
+sort <- data_mean_log2_diff_2 %>%
   slice(rownum) %>% 
   order(decreasing = TRUE)
 # Modify sorting key to not affect time and treatment columns
@@ -66,3 +68,6 @@ write_tsv(x = data_mean_log2,
           file = "data/03_data_mean_log2.tsv")
 write_tsv(x = data_sorted,
           file = "data/03_data_aug_sorted.tsv")
+write_tsv(x = data_mean_log2_diff,
+          file = "data/03_data_mean_log2_diff.tsv")
+
