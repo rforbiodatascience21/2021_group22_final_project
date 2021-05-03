@@ -20,12 +20,13 @@ normalized_data <- data_clean %>%
   ungroup() 
 
 # Calculating FC
-data_FC_calculation <- normalized_data %>% select(c(-time_as_numeric,-counts,-total_counts)) %>% 
+data_FC_calculation <- normalized_data %>% 
+  select(c(-time_as_numeric, -counts, -total_counts)) %>% 
   group_by(treatment,time,genes) %>% 
   mutate(mean_over_replicates = mean(normalized_counts)) %>% 
-  select(treatment,time,mean_over_replicates) %>% 
+  select(treatment, time, mean_over_replicates) %>% 
   distinct() %>% 
-  pivot_wider(names_from = treatment,values_from = mean_over_replicates) %>% 
+  pivot_wider(names_from = treatment, values_from = mean_over_replicates) %>% 
   mutate(fold_change = Virus/Control)
 
 # Take mean across of each set of replicates, change time variable to numeric
@@ -46,9 +47,11 @@ data_mean_log2_diff <- data_mean_log2 %>%
   summarise_if(is.numeric, diff) %>%
   column_to_rownames(var = "time")
 
-# Extract order of highest differential expresison based 2, 6, 10 or 24 hours
+# Extract order of highest differential expression based on 2, 6, 10 or 24 hours
 rownum <- 4   # 4 = 24h
-sort <- data_mean_log2_diff %>% slice(rownum) %>% order(decreasing = TRUE)
+sort <- data_mean_log2_diff %>%
+  slice(rownum) %>% 
+  order(decreasing = TRUE)
 # Modify sorting key to not affect time and treatment columns
 sort2 <- sort+2
 sort3 <- prepend(sort2, c(1,2))

@@ -1,3 +1,6 @@
+# Clear workspace ---------------------------------------------------------
+rm(list = ls())
+
 library("tidyverse")
 library("broom")
 
