@@ -36,7 +36,7 @@ data_FC_calculation <- normalized_data %>% select(c(-time_as_numeric,-counts,-to
   mutate(fold_change = Virus/Control)
 
   
-  
+data_FC_calculation
 
 # Then take mean across of each set of replicates
 # Finally change time variable to numeric
@@ -51,12 +51,19 @@ data_mean <- data_clean %>%
 
 
 
+
 # Log2 transform all gene expression variables
 # I think maybe you misunderstood - is log fold change not the log of the fold change? 
 # not the fold change of the logs...
 
 data_mean_log2 <- data_mean %>%
   mutate_at(vars(-c(treatment, time)), log2)
+
+data_mean_log2
+
+write_tsv(x = data_mean_log2,
+          file = "data/03_data_mean_log2.tsv")
+
 
 # Group by time to calculate the difference between virus and control expression for each time-point
 # Move time variable to rownames
@@ -66,6 +73,8 @@ data_mean_log2_diff <- data_mean_log2 %>%
   group_by(time) %>%
   summarise_if(is.numeric, diff) %>%
   column_to_rownames(var = "time")
+
+
 
 # Extract order of highest differential expresison based 2, 6, 10 or 24 hours
 rownum <- 4   # 4 = 24h

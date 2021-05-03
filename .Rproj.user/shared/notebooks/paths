@@ -10,11 +10,9 @@
 /cloud/project/R/old_03_data_augment.R="FAE29A90"
 /cloud/project/README.md="AD0E0419"
 /cloud/project/data/01_my_data_counts.tsv="D5DC6AFD"
-<<<<<<< HEAD
 /cloud/project/data/01_my_data_samples.tsv="1B4F78A9"
 /cloud/project/data/02_my_data_clean.tsv="0E1AC612"
-=======
->>>>>>> f93c28da4522b687727d86770555fd1d818f322a
+/cloud/project/data/03_data_mean_log2.tsv="53A5E75C"
 /cloud/project/data/_raw/counts.csv="3865A224"
 /cloud/project/data/_raw/samples.csv="BA35CA96"
 /cloud/project/doc/Presentation.Rmd="81C2CD4F"

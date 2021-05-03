@@ -1,9 +1,19 @@
-library(shiny)
-library(shinythemes)
+library("tidyverse")
+library("shiny")
+library("shinythemes")
 
 #Load data
-data <- read_tsv("../data/03_normalized_counts_and_raw_counts.tsv")
-data
+data_for_plot_raw <- read_tsv("../data/03_data_mean_log2.tsv")
+
+data_for_plot_raw
+
+#prepare data for plot
+data_for_plot <- data_for_plot_raw %>%
+  pivot_longer(cols = c(-treatment, time),
+               names_to = "genes",
+               values_to = "log_fold_change") 
+
+
 
 # Define UI
 ui <- fluidPage(theme = shinytheme("yeti"),
