@@ -170,3 +170,5 @@ ggplot(data = bojkova_log_nested, mapping = aes(x = estimate,
   ggtitle("CIplot of 100 random genes")
 
 ggsave(filename = "results/04_CI_plot_prøve.png", width = 16, height = 9, dpi = 72)
+
+
