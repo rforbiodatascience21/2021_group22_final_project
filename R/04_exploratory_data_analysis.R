@@ -62,8 +62,8 @@ biplot_PCA <- augment_PCA %>%
 
 PCA_plot <- scree_plot / biplot_PCA
 
-ggsave(filename = "results/04_PCA_plot",
+ggsave(filename = "results/04_PCA_plot.png",
        plot = PCA_plot,
        device = "png")
-  
+
   
