@@ -9,8 +9,11 @@ data_clean <- read_tsv(file = "data/02_my_data_clean.tsv")
 
 # Wrangle data ------------------------------------------------------------
 # Take mean across of each set of replicates, change time variable to numeric
-normalized_data <- data_clean %>% 
-  pivot_longer(cols = c(-treatment, -time,-replicate,-experiment),
+data_normalized <- data_clean %>% 
+  pivot_longer(cols = c(-treatment,
+                        -time,
+                        -replicate,
+                        -experiment),
                names_to = "genes",
                values_to = "counts") %>% 
   group_by(experiment) %>% 
@@ -19,15 +22,23 @@ normalized_data <- data_clean %>%
          time_as_numeric = as.numeric(str_extract(time, "\\d+"))) %>% 
   ungroup() 
 
-# Calculating FC
-data_FC_calculation <- normalized_data %>% 
-  select(c(-time_as_numeric, -counts, -total_counts)) %>% 
-  group_by(treatment,time,genes) %>% 
+# Calculating mean expression across replicates for every  
+data_normalized_mean_across_replicates <- data_normalized %>% 
+  select(c(-time_as_numeric,
+           -counts,
+           -total_counts)) %>% 
+  group_by(treatment,
+           time,
+           genes) %>% 
   mutate(mean_over_replicates = mean(normalized_counts)) %>% 
-  select(treatment, time, mean_over_replicates) %>% 
-  distinct() %>% 
-  pivot_wider(names_from = treatment, values_from = mean_over_replicates) %>% 
-  mutate(fold_change = Virus/Control)
+  ungroup() %>% 
+  select(treatment,
+         time, 
+         genes,
+         replicate,
+         normalized_counts,
+         mean_over_replicates) %>% 
+  distinct() 
 
 # Take mean across of each set of replicates, change time variable to numeric
 data_mean <- data_clean %>%
@@ -62,12 +73,20 @@ sort3 <- prepend(sort2, c(1,2))
 data_sorted <- data_mean %>% relocate(all_of(sort3))
 
 # Write data --------------------------------------------------------------
-write_tsv(x = normalized_data,
+write_tsv(x = data_normalized,
           file = "data/03_normalized_counts_and_raw_counts.tsv")
+
+write_tsv(x = data_normalized_mean_across_replicates,
+          file = "data/03_data_normalized_counts_mean_counts")
+
 write_tsv(x = data_mean_log2,
           file = "data/03_data_mean_log2.tsv")
+
 write_tsv(x = data_sorted,
           file = "data/03_data_aug_sorted.tsv")
+
 write_tsv(x = data_mean_log2_diff,
           file = "data/03_data_mean_log2_diff.tsv")
+
+
 
