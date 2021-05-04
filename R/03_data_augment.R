@@ -74,10 +74,10 @@ data_sorted <- data_mean %>% relocate(all_of(sort3))
 
 # Write data --------------------------------------------------------------
 write_tsv(x = data_normalized,
-          file = "data/03_normalized_counts_and_raw_counts.tsv")
+          file = "data/03_data_normalized_counts_and_raw_counts.tsv")
 
 write_tsv(x = data_normalized_mean_across_replicates,
-          file = "data/03_data_normalized_counts_mean_counts")
+          file = "data/03_data_normalized_mean_across_replicates.tsv")
 
 write_tsv(x = data_mean_log2,
           file = "data/03_data_mean_log2.tsv")
