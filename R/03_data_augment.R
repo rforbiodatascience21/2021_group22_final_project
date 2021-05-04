@@ -8,6 +8,7 @@ library("tidyverse")
 data_clean <- read_tsv(file = "data/02_my_data_clean.tsv")
 
 # Wrangle data ------------------------------------------------------------
+
 # Take mean across of each set of replicates, change time variable to numeric
 data_normalized <- data_clean %>% 
   pivot_longer(cols = c(-treatment,
