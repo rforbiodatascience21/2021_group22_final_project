@@ -46,7 +46,7 @@ data_log2_nested <- data_log2_nested %>%
          gene_label = case_when(identified_as == "Significant" ~ gene,
                                 identified_as == "Non-significant" ~ ""))
 
-#Negative log p values
+# Negative log p values
 data_log2_nested <- data_log2_nested %>% 
   mutate(neg_log10_p = -log10(p.value))
 
@@ -71,6 +71,12 @@ pca_fit %>%
         panel.grid.major = element_line()) + 
   labs(title = "PCA coordinate plot", color = "Outcome", x = "fittedPC1",
        y = "fittedPC2")
+
+
+
+# Different DE expression analysis that uses all replicates ---------------
+
+data = read_tsv
 
 ## K means clustering (One script, 05_model_ii.R --> Output 1 plot)
 
