@@ -60,11 +60,10 @@ biplot_PCA <- augment_PCA %>%
        y = "PC 2") + 
   theme_minimal()
 
-scree_plot / biplot_PCA
+PCA_plot <- scree_plot / biplot_PCA
 
-png(file="results/04_PCA_plot",
-    width=600, height=350)
-
-  
+ggsave(filename = "results/04_PCA_plot",
+       plot = PCA_plot,
+       device = "png")
   
   
