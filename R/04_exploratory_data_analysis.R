@@ -13,3 +13,4 @@ ggplot(data = data, mapping = aes(x = treatment, y = normalized_counts, fill = t
   scale_fill_viridis_d() +
   theme_minimal() + 
   labs(y = "Log10-scaled normalized counts", x = "Infection")
+

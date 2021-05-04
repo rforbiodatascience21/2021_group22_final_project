@@ -16,6 +16,18 @@ knitr::opts_chunk$set(echo = FALSE)
 
 insert picture of structure
 
+# Introduction:
+
+## Problem statement
+
+## Overall aim of project
+
+## Project overview and structure
+
+
+
+# Materials and methods
+
 ## Dataset origin
 
 ## Data cleaning
@@ -26,6 +38,14 @@ insert picture of structure
 
 ## Modelling
 
+
+# Results
+
 ## Making a Shiny app
+
+
+# Discussion
+
+## bla bla
 
 
