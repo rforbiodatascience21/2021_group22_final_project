@@ -4,6 +4,7 @@ rm(list = ls())
 # Load libraries ----------------------------------------------------------
 library("tidyverse")
 library("broom")
+library("purrr")
 
 # Load data ---------------------------------------------------------------
 data_log2 <- read_tsv(file = "data/03_data_mean_log2_diff.tsv")
@@ -76,7 +77,34 @@ pca_fit %>%
 
 # Different DE expression analysis that uses all replicates ---------------
 
-data = read_tsv
+set.seed(934485)
+
+data = read_tsv("data/03_data_normalized_mean_across_replicates.tsv") %>% 
+  group_by(genes) %>% 
+  nest() %>% 
+  ungroup() %>% 
+  sample_n(500) %>% 
+  unnest(cols = data)
+
+data_DE_analysis_nested <- data %>% 
+  group_by(time, genes) %>% 
+  nest() %>% 
+  mutate(mdl = map(.x = data,
+                            .f = ~glm(data = .x,
+                                     formula = normalized_counts ~ treatment))) 
+
+data_tidy_model <- data_DE_analysis_nested %>% 
+  mutate(mdl_tidy = map(.x = mdl, ~tidy(.x,conf.int=TRUE)))
+
+unnested_tidy_model <- data_tidy_model %>% 
+  unnest(mdl_tidy)
+
+augmented_model_results <- unnested_tidy_model %>% 
+  filter(term == "treatmentVirus") %>% 
+  mutate(regulation = case_when(estimate > 0 ~ "Upregulated",
+                                estimate < 0 ~ "Downregulated"),
+         significance = case_when(p.value >= 0.05 ~ "Not significant",
+                                  p.value < 0.05 ~ "Significant"))
 
 ## K means clustering (One script, 05_model_ii.R --> Output 1 plot)
 
