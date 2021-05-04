@@ -62,6 +62,8 @@ biplot_PCA <- augment_PCA %>%
 
 scree_plot / biplot_PCA
 
+png(file="results/04_PCA_plot",
+    width=600, height=350)
 
   
   
