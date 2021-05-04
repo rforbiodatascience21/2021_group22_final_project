@@ -19,7 +19,7 @@ data_log2_long <- data_log2 %>%
 data_log2_nested <- data_log2_long %>%
   group_by(gene) %>%
   nest %>% 
-  ungroup
+  ungroup()
 
 #Select random genes
 set.seed(934485)
@@ -100,11 +100,23 @@ unnested_tidy_model <- data_tidy_model %>%
   unnest(mdl_tidy)
 
 augmented_model_results <- unnested_tidy_model %>% 
-  filter(term == "treatmentVirus") %>% 
   mutate(regulation = case_when(estimate > 0 ~ "Upregulated",
                                 estimate < 0 ~ "Downregulated"),
          significance = case_when(p.value >= 0.05 ~ "Not significant",
-                                  p.value < 0.05 ~ "Significant"))
+                                  p.value < 0.05 ~ "Significant")) %>% 
+  filter(term == "treatmentVirus") %>% 
+  select(genes,
+         time,
+         data,
+         estimate,
+         p.value, 
+         regulation,
+         significance) %>% 
+  unnest(data)
+  
+write_tsv(augmented_model_results, 
+          file = "results/05_individual_times_ttest_and_data.tsv")
+
 
 ## K means clustering (One script, 05_model_ii.R --> Output 1 plot)
 
