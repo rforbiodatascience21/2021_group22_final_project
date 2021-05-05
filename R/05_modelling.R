@@ -21,15 +21,11 @@ data_log2_nested <- data_log2_long %>%
   nest %>% 
   ungroup()
 
-#Select random genes
-set.seed(934485)
-data_log2_nested = data_log2_nested %>%
-  sample_n(100)
-
 # Fitting general linear model to each of the 100 genes
 data_log2_nested <- data_log2_nested  %>%
   mutate(mdl = map(data, ~glm(time ~ log2_expr_level,
-                              data = .x)))
+                              data = .x,
+                              family = binomial(link = "logit"))))
 
 # Add some more model data using broom
 data_log2_nested <- data_log2_nested %>%
@@ -50,30 +46,6 @@ data_log2_nested <- data_log2_nested %>%
 # Negative log p values
 data_log2_nested <- data_log2_nested %>% 
   mutate(neg_log10_p = -log10(p.value))
-
-#PCA plot
-data_log2_wide <- data_log2_long %>%
-  pivot_wider(names_from = "gene", values_from = "log2_expr_level")
-
-data_log2_wide <- data_log2_wide %>%
-  select(time, pull(data_log2_nested, gene))
-
-pca_fit <- bojkova_data_wide %>%
-  select(where(is.numeric)) %>%
-  prcomp(scale = TRUE)
-
-pca_fit %>%
-  augment(bojkova_data_wide) %>% 
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, 
-             color = as.numeric(time))) + 
-  geom_point(size = 1.5)  + 
-  theme_classic(base_family = "Avenir") + 
-  theme(legend.position = "bottom", 
-        panel.grid.major = element_line()) + 
-  labs(title = "PCA coordinate plot", color = "Outcome", x = "fittedPC1",
-       y = "fittedPC2")
-
-
 
 # Different DE expression analysis that uses all replicates ---------------
 
