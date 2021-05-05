@@ -20,10 +20,10 @@ data_normalized <- data_clean %>%
   group_by(experiment) %>% 
   mutate(total_counts = sum(counts),
          normalized_counts = (6000000/total_counts)*counts, 
-         time_as_numeric = as.numeric(str_extract(time, "\\d+"))) %>% 
+         time_as_numeric = as.numeric(str_extract(time, "\\d+"))) %>%    #time as numeric
   ungroup() 
 
-# Calculating mean expression across replicates for every  
+# Calculating normalized mean expression across replicates for every experiment
 data_normalized_mean_across_replicates <- data_normalized %>% 
   select(c(-time_as_numeric,
            -counts,
@@ -46,7 +46,7 @@ data_mean <- data_clean %>%
   select(-replicate) %>%
   group_by(treatment, time) %>%
   summarise_if(is.numeric, mean, na.rm = TRUE) %>%
-  mutate(time = as.numeric(str_extract(time, "\\d+")))
+  mutate(time = as.numeric(str_extract(time, "\\d+")))        #changing time to numeric
 
 # Log2 transform all gene expression variables
 data_mean_log2 <- data_mean %>%
@@ -56,7 +56,7 @@ data_mean_log2 <- data_mean %>%
 # Move time variable to rownames
 data_mean_log2_diff <- data_mean_log2 %>% 
   group_by(time) %>%
-  summarise_if(is.numeric, diff) 
+  summarise_if(is.numeric, diff)          #virus minus control eller omvendt?
 
 data_mean_log2_diff_2 <- data_mean_log2_diff %>% 
   column_to_rownames(var = "time")
