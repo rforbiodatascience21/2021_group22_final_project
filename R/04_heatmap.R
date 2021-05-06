@@ -45,6 +45,5 @@ ggplot(data = data_plot3, aes(x = experiment, genes)) +
   geom_tile(aes(fill = z_score)) +
   scale_fill_gradient2(low = "yellow", high = "red")
 
-ggsave(filename = "results/04_heatmap.png",
-       plot = Heatmap,
-       device = "png")
+ggsave(path = "results",
+       filename = "Heatmap.png")
