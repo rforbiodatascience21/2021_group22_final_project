@@ -46,7 +46,7 @@ data_mean <- data_clean %>%
   select(-replicate) %>%
   group_by(treatment, time) %>%
   summarise_if(is.numeric, mean, na.rm = TRUE) %>%
-  mutate(time = as.numeric(str_extract(time, "\\d+")))        #changing time to numeric
+  mutate(time = as.numeric(str_extract(time, "\\d+")))
 
 # Log2 transform all gene expression variables
 data_mean_log2 <- data_mean %>%
@@ -60,6 +60,7 @@ data_mean_log2_diff <- data_mean_log2 %>%
 
 data_mean_log2_diff_2 <- data_mean_log2_diff %>% 
   column_to_rownames(var = "time")
+
 
 # Extract order of highest differential expression based on 2, 6, 10 or 24 hours
 rownum <- 4   # 4 = 24h
