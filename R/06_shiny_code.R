@@ -14,7 +14,8 @@ data_for_plot <- data_for_plot_raw %>%
                values_to = "log_fold_change") 
 
 # Loading data for one of the subpanels: 
-data_times_seperated <- read_tsv("results/05_individual_times_ttest_and_data.tsv")
+data_times_seperated <- read_tsv("results/05_individual_times_ttest_and_data.tsv") %>% 
+  mutate(time_as_numeric = as.numeric(str_extract(time, "\\d+"))) 
 
 # making list of genes to choose between: 
 unique_gene_names <- data_times_seperated %>% 
@@ -26,10 +27,11 @@ unique_gene_names <- data_times_seperated %>%
 ui <- fluidPage(theme = shinytheme("cerulean"),
                 navbarPage("My first navbar page",
                            tabPanel("Protein expression per time", 
-                                    sidebarPanel(selectInput(inputId = "Selected_gene",
+                                    sidebarPanel(selectizeInput(inputId = "Selected_gene",
                                                              "Gene:",
                                                              choices = unique_gene_names,
-                                                             selected = "	44085")),
+                                                             selected = "SPIKE_WCPV",
+                                                             options = list(maxItems = 1))),
                                     mainPanel(plotOutput("myplot"))
                                     ),
                            tabPanel("navbar 2"),
@@ -45,10 +47,15 @@ server <- function(input, output) {
   
   output$myplot <- renderPlot({
     ggplot(temp_tibble_for_plotting(),
-           mapping = aes(x = time,
+           mapping = aes(x = fct_reorder(time,time_as_numeric),
                          y = normalized_counts,
-                         fill = treatment)) +
-    geom_boxplot()
+                         fill = treatment,
+                         color = significance)) +
+    geom_boxplot() + 
+    scale_colour_manual(values = c("black", "blue")) +
+    labs(x = "Time",
+         y = "Normalized Counts") + 
+    theme_minimal()
     })
 }  #server
 
