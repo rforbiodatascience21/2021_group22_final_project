@@ -1,6 +1,6 @@
 library("tidyverse")
 
-data_sorted <- read_tsv(file = "data/02_my_data_clean.tsv")
+data_sorted <- read_tsv(file = "data/03_data_mean_log2.tsv")
 
 
 num_genes <- 20
