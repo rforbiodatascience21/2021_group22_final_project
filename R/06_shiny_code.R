@@ -2,6 +2,9 @@ library("tidyverse")
 library("shiny")
 library("shinythemes")
 
+setwd("/cloud/project")
+source(file = "R/99_functions.R")
+
 #Load data
 data_for_plot_raw <- read_tsv("data/03_data_mean_log2.tsv")
 
@@ -23,6 +26,8 @@ unique_gene_names <- data_times_seperated %>%
   distinct() %>% 
   arrange(genes)
 
+data_tab2 <- read_tsv("data/03_data_aug_sorted.tsv")
+
 # Define UI
 ui <- fluidPage(theme = shinytheme("cerulean"),
                 navbarPage("My first navbar page",
@@ -34,7 +39,14 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                                              options = list(maxItems = 1))),
                                     mainPanel(plotOutput("myplot"))
                                     ),
-                           tabPanel("navbar 2"),
+                           tabPanel("Plot top genes",
+                                    sidebarPanel(sliderInput("numGenes", "Number of genes: ",
+                                                             min = 1, max = 50,
+                                                             value = 25),
+                                                 checkboxInput("logScale", "log-scale y", TRUE)
+                                    ),
+                                    mainPanel(plotOutput("plot2"))
+                           ),
                            tabPanel("navbar 3")
                             )
                 ) # fluidPage
@@ -44,6 +56,14 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
 server <- function(input, output) {
   temp_tibble_for_plotting <- reactive(data_times_seperated  %>% 
     filter(genes == input$Selected_gene))
+  
+  #tab2
+  data_sorted_long <- reactive(
+    top_genes_wide_to_long(data_tab2, input$numGenes)
+  )
+  order_names <- reactive(
+    top_gene_order(data_sorted_long(), input$numGenes)
+  )
   
   output$myplot <- renderPlot({
     ggplot(temp_tibble_for_plotting(),
@@ -57,6 +77,30 @@ server <- function(input, output) {
          y = "Normalized Counts") + 
     theme_minimal()
     })
+  
+  #plot2 
+  output$plot2 <- renderPlot({
+      ggplot(data_sorted_long(),
+             mapping = aes(factor(gene, level = order_names()),
+                           count,
+                           color=time,
+                           shape=treatment,
+                           size=1.2,
+                           alpha=0.8)) +
+        geom_point() +
+        theme(axis.text.x = element_text(angle=-45,
+                                         vjust=-0.6,
+                                         hjust=0.4,
+                                         size=10)) +
+        xlab("Genes") +
+        {if(input$logScale)ylab("log(count)")
+        else ylab("count")} +
+        {if(input$logScale)scale_y_log10()} +
+        guides(size=FALSE, alpha=FALSE) +
+        labs(title = "Top Genes",
+             subtitle = "Ordered by differential expression at t=24h")
+    })
+    
 }  #server
 
 
