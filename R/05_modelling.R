@@ -21,19 +21,19 @@ data_log2_nested <- data_log2_long %>%
   nest %>% 
   ungroup()
 
-# Fitting general linear model to each of the genes
+# Fitting linear model to each of the genes
 data_log2_nested <- data_log2_nested  %>% 
-  mutate(mdl = map(data, ~glm(time ~ log2_expr_level,
+  mutate(mdl = map(data, ~lm(log2_expr_level ~ time,
                               data = .x)))
 
-# Add some more model data using broom
+# Add some model data using broom 
 data_log2_nested <- data_log2_nested %>%
   mutate(mdl_tidy = map(mdl, ~tidy(.x, conf.int = TRUE))) %>% 
   unnest(mdl_tidy)
 
 # Looking only at slopes
 data_log2_nested <- data_log2_nested %>% 
-  filter(str_detect(term, "level"))
+  filter(str_detect(term, "time"))
 
 # Adding significance
 data_log2_nested <- data_log2_nested %>% 
