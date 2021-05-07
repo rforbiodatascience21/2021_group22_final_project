@@ -4,15 +4,15 @@ rm(list = ls())
 # Load libraries ----------------------------------------------------------
 library("tidyverse")
 library("broom")
-library("purrr")
+library("purrr")  #Purrr er en del af tidyverse så vi behøver ikke kalde den
 
 # Load data ---------------------------------------------------------------
 data_log2 <- read_tsv(file = "data/03_data_mean_log2_diff.tsv")
 
 # Wrangle data ------------------------------------------------------------
-## PCA (One script, 05_model_i.R --> Output 1 plot)
 # Move the data around
 data_log2_long <- data_log2 %>%
+  select(-NFIC) %>% #Still trouble with Inf and this gene -> clean
   pivot_longer(-time, names_to = "gene", values_to = "log2_expr_level") 
 
 # Converting to nested data
@@ -21,11 +21,10 @@ data_log2_nested <- data_log2_long %>%
   nest %>% 
   ungroup()
 
-# Fitting general linear model to each of the 100 genes
-data_log2_nested <- data_log2_nested  %>%
+# Fitting general linear model to each of the genes
+data_log2_nested <- data_log2_nested  %>% 
   mutate(mdl = map(data, ~glm(time ~ log2_expr_level,
-                              data = .x,
-                              family = binomial(link = "logit"))))
+                              data = .x)))
 
 # Add some more model data using broom
 data_log2_nested <- data_log2_nested %>%
