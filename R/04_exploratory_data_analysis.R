@@ -3,6 +3,7 @@
 library("tidyverse")
 library("broom")
 library("patchwork")
+library("ggrepel")
 
 
 # Checking normalization --------------------------------------------------
@@ -77,5 +78,20 @@ PCA_plot <- scree_plot / biplot_PCA
 ggsave(filename = "results/04_PCA_plot.png",
        plot = PCA_plot,
        device = "png")
+
+
+# Doing K-means on PCA transformed counts ---------------------------------
+
+K_means_data <- augment_PCA %>% 
+  select(.fittedPC1, .fittedPC2) %>% 
+  kmeans(centers = 4) %>% 
+  augment(augment_PCA) %>% 
+  select(.fittedPC1, .fittedPC2, .cluster, experiment, time, treatment)
+
+K_means_data %>% 
+  ggplot(mapping = aes(x = .fittedPC1,
+                       y = .fittedPC2,
+                       color = .cluster)) + 
+  geom_point()
 
   

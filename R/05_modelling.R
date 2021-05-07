@@ -55,7 +55,6 @@ data = read_tsv("data/03_data_normalized_mean_across_replicates.tsv") %>%
   group_by(genes) %>% 
   nest() %>% 
   ungroup() %>% 
-  sample_n(500) %>% 
   unnest(cols = data)
 
 data_DE_analysis_nested <- data %>% 
