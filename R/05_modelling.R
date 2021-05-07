@@ -83,11 +83,7 @@ augmented_model_results <- unnested_tidy_model %>%
          regulation,
          significance) %>% 
   unnest(data)
-  
-write_tsv(augmented_model_results, 
-          file = "results/05_individual_times_ttest_and_data.tsv")
-
-
-## K means clustering (One script, 05_model_ii.R --> Output 1 plot)
 
 # Write data --------------------------------------------------------------
+write_tsv(augmented_model_results, 
+          file = "results/05_individual_times_ttest_and_data.tsv")
