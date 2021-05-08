@@ -41,7 +41,32 @@ data_log2_nested <- data_log2_nested %>%
 # Unnest the data again for later plotting
 data_log2_unnested <- data_log2_nested %>%
   unnest(data) 
-  
+
+
+# Jens FC model same as signe ---------------------------------------------
+
+model_object <- read_tsv(file = "data/03_data_mean_log2_diff.tsv") %>% 
+  pivot_longer(cols = -time, 
+               names_to = "Gene", 
+               values_to = "LogFC") %>% 
+  group_by(Gene) %>% 
+  nest() %>% 
+  mutate(lin_mdl = map(.x = data,
+                       .f = ~glm(formula = LogFC ~ time,
+                                 data = .x)))
+
+
+nested_tidy_model_object <- model_object %>% 
+  ungroup() %>% 
+  mutate(tidy_lin_mdl = map(.x = lin_mdl, 
+                            .f = ~tidy(.x)))
+
+
+unnested_tidy_model_object <- nested_tidy_model_object %>% 
+  unnest(tidy_lin_mdl) %>% 
+  unnest(data) %>% 
+  select(-lin_mdl)
+
 # Different DE expression analysis that uses all replicates ---------------
 
 set.seed(934485)
@@ -56,8 +81,8 @@ data_DE_analysis_nested <- data %>%
   group_by(time, genes) %>% 
   nest() %>% 
   mutate(mdl = map(.x = data,
-                            .f = ~glm(data = .x,
-                                     formula = normalized_counts ~ treatment))) 
+                   .f = ~glm(data = .x,
+                   formula = normalized_counts ~ treatment))) 
 
 data_tidy_model <- data_DE_analysis_nested %>% 
   mutate(mdl_tidy = map(.x = mdl, ~tidy(.x,conf.int=TRUE)))
@@ -85,3 +110,5 @@ write_tsv(augmented_model_results,
           file = "results/05_individual_times_ttest_and_data.tsv")
 write_tsv(data_log2_unnested, 
           file = "results/05_linear_model_results.tsv")
+write_tsv(unnested_tidy_model_object, 
+          file = "results/05_linear_model_time_results.tsv")
