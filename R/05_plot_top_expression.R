@@ -8,7 +8,7 @@ num_genes <- 20
 # Select the top n differentially expressed genes for plotting
 # Then pivot longer to get 1 gene per row
 data_sorted_long <- data_sorted %>%
-  select(1:all_of(num_genes+2)) %>%
+  select(1:all_of(num_genes+2)) %>% # is this base R maybe change?
   pivot_longer(!c(treatment, time),
                names_to = "gene",
                values_to = "count")
