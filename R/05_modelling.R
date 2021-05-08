@@ -46,9 +46,9 @@ data_log2_nested <- data_log2_nested %>%
          gene_label = case_when(identified_as == "Significant" ~ gene,
                                 identified_as == "Non-significant" ~ ""))
 
+# Unnest the data again for later plotting
 data_log2_unnested <- data_log2_nested %>%
-  unnest(data) %>%
-  select(-mdl) 
+  unnest(data) 
   
 # Different DE expression analysis that uses all replicates ---------------
 
