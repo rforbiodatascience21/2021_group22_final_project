@@ -4,7 +4,6 @@ rm(list = ls())
 # Load libraries ----------------------------------------------------------
 library("tidyverse")
 library("broom")
-library("purrr")  #Purrr er en del af tidyverse så vi behøver ikke kalde den
 
 # Load data ---------------------------------------------------------------
 data_log2 <- read_tsv(file = "data/03_data_mean_log2_diff.tsv")
@@ -27,7 +26,7 @@ data_log2_nested <- data_log2_long %>%
 
 # Fitting linear model to each of the genes
 data_log2_nested <- data_log2_nested  %>% 
-  mutate(mdl = map(data, ~lm(log2_expr_level ~ time,
+  mutate(mdl = map(data, ~lm(formula = log2_expr_level ~ time,
                               data = .x)))
 
 # Extract more model data using the broom package
@@ -42,13 +41,23 @@ data_log2_nested <- data_log2_nested %>%
 # Adding significance
 data_log2_nested <- data_log2_nested %>% 
   mutate(identified_as = case_when(p.value < 0.05 ~ "Significant",
-                                   TRUE ~ "Non-significant"),
-         gene_label = case_when(identified_as == "Significant" ~ gene,
-                                identified_as == "Non-significant" ~ ""))
+                                   TRUE ~ "Non-significant"))
 
 # Unnest the data again for later plotting
 data_log2_unnested <- data_log2_nested %>%
   unnest(data) 
+
+try <- data_log2_nested %>%
+  mutate(fit = map(mdl, ~ .$fitted.values))
+
+try_unnested <- try %>%
+  unnest(data) %>%
+  unnest(fit)
+
+try_unnested %>%
+  select("gene" == 43891) %>%
+  ggplot(aes(x = time, y = fit)) +
+  geom_point()
   
 # Different DE expression analysis that uses all replicates ---------------
 
