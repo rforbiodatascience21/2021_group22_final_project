@@ -15,7 +15,7 @@ my_data_samples <- read_tsv(file = "data/01_my_data_samples.tsv")
 my_data_counts_wide <- my_data_counts %>% 
   rename(genes = X1) %>%
   pivot_longer(-genes, names_to = "experiment", values_to = "expression") %>%
-  mutate(expression = replace(expression, 0, 0.0000001)) %>%
+  mutate(expression = replace(expression, expression == 0, 0.000001)) %>%
   pivot_wider(names_from = "genes", values_from = "expression")
 
 
