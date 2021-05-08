@@ -26,13 +26,13 @@ data_log2_nested <- data_log2_long %>%
 
 # Fitting linear model to each of the genes
 data_log2_nested <- data_log2_nested  %>% 
-  mutate(mdl = map(data, ~lm(formula = log2_expr_level ~ time,
+  mutate(model = map(data, ~lm(formula = log2_expr_level ~ time,
                               data = .x)))
 
 # Extract more model data using the broom package
 data_log2_nested <- data_log2_nested %>%
-  mutate(mdl_tidy = map(mdl, ~tidy(.x, conf.int = TRUE))) %>% 
-  unnest(mdl_tidy)
+  mutate(tidymodel = map(model, ~tidy(.x, conf.int = TRUE))) %>% 
+  unnest(tidymodel)
 
 # Looking only at slopes and not intercepts
 data_log2_nested <- data_log2_nested %>% 
@@ -46,18 +46,6 @@ data_log2_nested <- data_log2_nested %>%
 # Unnest the data again for later plotting
 data_log2_unnested <- data_log2_nested %>%
   unnest(data) 
-
-try <- data_log2_nested %>%
-  mutate(fit = map(mdl, ~ .$fitted.values))
-
-try_unnested <- try %>%
-  unnest(data) %>%
-  unnest(fit)
-
-try_unnested %>%
-  select("gene" == 43891) %>%
-  ggplot(aes(x = time, y = fit)) +
-  geom_point()
   
 # Different DE expression analysis that uses all replicates ---------------
 
