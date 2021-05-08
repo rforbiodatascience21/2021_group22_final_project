@@ -54,9 +54,7 @@ data_sorted_long <- data_sorted %>%
 
 head(data_sorted_long)
 
-data_plot3 <- semi_join(calculate_zscore, data_sorted_long, by="genes") %>%
-  select(experiment) %>%
-  rename(C1 = Control_2h)
+data_plot3 <- semi_join(calculate_zscore, data_sorted_long, by="genes")
 
   
   
@@ -64,7 +62,7 @@ dim(data_plot3)
 head(data_plot3, n = 10)
 
 
-ggplot(data = data_plot3, aes(x = rowid[1:8], y = genes)) +
+ggplot(data = data_plot3, aes(x = experiment, y = genes)) +
   geom_tile(aes(fill = z_score)) +
   scale_fill_gradient2(low = "yellow", high = "red")
   #scale_x_discrete(labels=c("Control 2h", "Control 6h", "Control ","1h","2h","3h","6h","12h","24h","48h"))
