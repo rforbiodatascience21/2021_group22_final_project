@@ -4,16 +4,20 @@ rm(list = ls())
 # Load libraries ----------------------------------------------------------
 library("tidyverse")
 library("broom")
-library("purrr")
+library("purrr")  #Purrr er en del af tidyverse så vi behøver ikke kalde den
 
 # Load data ---------------------------------------------------------------
 data_log2 <- read_tsv(file = "data/03_data_mean_log2_diff.tsv")
 
 # Wrangle data ------------------------------------------------------------
-## PCA (One script, 05_model_i.R --> Output 1 plot)
 # Move the data around
 data_log2_long <- data_log2 %>%
+  select(-NFIC) %>% #Still trouble with Inf and this gene -> clean
   pivot_longer(-time, names_to = "gene", values_to = "log2_expr_level") 
+
+data_log2_long %>%
+  ggplot(mapping = aes(x = time, y = log2_expr_level, group = gene)) +
+  geom_line(alpha = 1/4)
 
 # Converting to nested data
 data_log2_nested <- data_log2_long %>%
@@ -21,20 +25,19 @@ data_log2_nested <- data_log2_long %>%
   nest %>% 
   ungroup()
 
-# Fitting general linear model to each of the 100 genes
-data_log2_nested <- data_log2_nested  %>%
-  mutate(mdl = map(data, ~glm(time ~ log2_expr_level,
-                              data = .x,
-                              family = binomial(link = "logit"))))
+# Fitting linear model to each of the genes
+data_log2_nested <- data_log2_nested  %>% 
+  mutate(mdl = map(data, ~lm(log2_expr_level ~ time,
+                              data = .x)))
 
-# Add some more model data using broom
+# Extract more model data using the broom package
 data_log2_nested <- data_log2_nested %>%
   mutate(mdl_tidy = map(mdl, ~tidy(.x, conf.int = TRUE))) %>% 
   unnest(mdl_tidy)
 
-# Looking only at slopes
+# Looking only at slopes and not intercepts
 data_log2_nested <- data_log2_nested %>% 
-  filter(str_detect(term, "level"))
+  filter(str_detect(term, "time"))
 
 # Adding significance
 data_log2_nested <- data_log2_nested %>% 
@@ -43,10 +46,10 @@ data_log2_nested <- data_log2_nested %>%
          gene_label = case_when(identified_as == "Significant" ~ gene,
                                 identified_as == "Non-significant" ~ ""))
 
-# Negative log p values
-data_log2_nested <- data_log2_nested %>% 
-  mutate(neg_log10_p = -log10(p.value))
-
+# Unnest the data again for later plotting
+data_log2_unnested <- data_log2_nested %>%
+  unnest(data) 
+  
 # Different DE expression analysis that uses all replicates ---------------
 
 set.seed(934485)
@@ -84,11 +87,9 @@ augmented_model_results <- unnested_tidy_model %>%
          regulation,
          significance) %>% 
   unnest(data)
-  
-write_tsv(augmented_model_results, 
-          file = "results/05_individual_times_ttest_and_data.tsv")
-
-
-## K means clustering (One script, 05_model_ii.R --> Output 1 plot)
 
 # Write data --------------------------------------------------------------
+write_tsv(augmented_model_results, 
+          file = "results/05_individual_times_ttest_and_data.tsv")
+write_tsv(data_log2_unnested, 
+          file = "results/05_linear_model_results.tsv")

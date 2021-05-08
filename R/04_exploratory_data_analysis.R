@@ -88,10 +88,15 @@ K_means_data <- augment_PCA %>%
   augment(augment_PCA) %>% 
   select(.fittedPC1, .fittedPC2, .cluster, experiment, time, treatment)
 
-K_means_data %>% 
+K_means_plot <- K_means_data %>% 
   ggplot(mapping = aes(x = .fittedPC1,
                        y = .fittedPC2,
                        color = .cluster)) + 
-  geom_point()
+  geom_point(size = 2) + 
+  theme_minimal() + 
+  labs(x = "PC1",
+       y = "PC2", 
+       color = "Cluster") + 
+  geom_label_repel(mapping = aes(label = experiment), size = 2.5)
 
-  
+

@@ -1,3 +1,4 @@
+# Load libraries ----------------------------------------------------------
 library("tidyverse")
 library("shiny")
 library("shinythemes")
@@ -5,11 +6,12 @@ library("shinythemes")
 setwd("/cloud/project")
 source(file = "R/99_functions.R")
 
-#Load data
+# Load data ---------------------------------------------------------------
 data_for_plot_raw <- read_tsv("data/03_data_mean_log2.tsv")
 
 data_for_plot_raw
 
+# Wrangle data ------------------------------------------------------------
 #prepare data for plot
 data_for_plot <- data_for_plot_raw %>%
   pivot_longer(cols = c(-treatment, time),
@@ -28,6 +30,7 @@ unique_gene_names <- data_times_seperated %>%
 
 data_tab2 <- read_tsv("data/03_data_aug_sorted.tsv")
 
+# App creation ------------------------------------------------------------
 # Define UI
 ui <- fluidPage(theme = shinytheme("cerulean"),
                 navbarPage("My first navbar page",
