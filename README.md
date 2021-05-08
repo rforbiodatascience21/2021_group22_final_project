@@ -7,6 +7,7 @@
 The goal of project is to ...
 
 ## Data
+The LC-MS/MS proteomics data was obtained from the article [Proteomics of SARS-CoV-2-infected host cells reveals therapy targets](https://www.nature.com/articles/s41586-020-2332-7?fbclid=IwAR3HEcdWjX3-4zTxGjXoiOtb2ol6iBMM6zt4uZ-ycECLEuu31KNJT_5uqaQ) by Bojkova et al.. 
 
 ## Authors
 This project was made by:  
@@ -15,4 +16,3 @@ This project was made by:
 * Jens Waaben (s205972)  
 * Signe Katrine Hjort (s174587)  
 * Signe Fischer Ravn (s175410)
-
