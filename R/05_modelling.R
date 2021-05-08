@@ -26,7 +26,7 @@ data_log2_nested <- data_log2_nested  %>%
   mutate(mdl = map(data, ~lm(log2_expr_level ~ time,
                               data = .x)))
 
-# Add some model data using broom 
+# Extract more model data using the broom package
 data_log2_nested <- data_log2_nested %>%
   mutate(mdl_tidy = map(mdl, ~tidy(.x, conf.int = TRUE))) %>% 
   unnest(mdl_tidy)
@@ -42,9 +42,6 @@ data_log2_nested <- data_log2_nested %>%
          gene_label = case_when(identified_as == "Significant" ~ gene,
                                 identified_as == "Non-significant" ~ ""))
 
-# Negative log p values
-data_log2_nested <- data_log2_nested %>% 
-  mutate(neg_log10_p = -log10(p.value))
 
 # Different DE expression analysis that uses all replicates ---------------
 
