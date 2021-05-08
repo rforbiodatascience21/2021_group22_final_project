@@ -40,6 +40,7 @@ data_log2_nested <- data_log2_nested %>%
 
 # Unnest the data again for later plotting
 data_log2_unnested <- data_log2_nested %>%
+  select(-model) %>%
   unnest(data) 
 
 
