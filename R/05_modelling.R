@@ -11,7 +11,7 @@ data_log2 <- read_tsv(file = "data/03_data_mean_log2_diff.tsv")
 # Wrangle data ------------------------------------------------------------
 # Move the data around
 data_log2_long <- data_log2 %>%
-  select(-NFIC) %>% #Still trouble with Inf and this gene -> clean
+  #select(-NFIC) %>% #Still trouble with Inf and this gene -> clean
   pivot_longer(-time, names_to = "gene", values_to = "log2_expr_level") 
 
 data_log2_long %>%
