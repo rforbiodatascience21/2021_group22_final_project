@@ -7,74 +7,47 @@ library("broom")
 
 # Load data ---------------------------------------------------------------
 data_log2 <- read_tsv(file = "data/03_data_mean_log2_diff.tsv")
+data <- read_tsv("data/03_data_normalized_mean_across_replicates.tsv")
 
 # Wrangle data ------------------------------------------------------------
-# Move the data around
-data_log2_long <- data_log2 %>%
-  select(-NFIC) %>% #Still trouble with Inf and this gene -> clean
-  pivot_longer(-time, names_to = "gene", values_to = "log2_expr_level") 
+# General linear model -----------------------
+# Fit general linear model to each gene 
+model_nested <- data_log2 %>%
+  pivot_longer(cols = -time, 
+               names_to = "Gene", 
+               values_to = "LogFC") %>%
+  group_by(Gene) %>% 
+  nest() %>%
+  ungroup() %>%
+  mutate(model = map(.x = data, 
+                     .f = ~glm(formula = LogFC ~ time, data = .x)))
 
-data_log2_long %>%
-  ggplot(mapping = aes(x = time, y = log2_expr_level, group = gene)) +
-  geom_line(alpha = 1/4)
-
-# Converting to nested data
-data_log2_nested <- data_log2_long %>%
-  group_by(gene) %>%
-  nest %>% 
-  ungroup()
-
-# Fitting linear model to each of the genes
-data_log2_nested <- data_log2_nested  %>% 
-  mutate(mdl = map(data, ~lm(formula = log2_expr_level ~ time,
-                              data = .x)))
-
-# Extract more model data using the broom package
-data_log2_nested <- data_log2_nested %>%
-  mutate(mdl_tidy = map(mdl, ~tidy(.x, conf.int = TRUE))) %>% 
-  unnest(mdl_tidy)
-
-# Looking only at slopes and not intercepts
-data_log2_nested <- data_log2_nested %>% 
-  filter(str_detect(term, "time"))
-
-# Adding significance
-data_log2_nested <- data_log2_nested %>% 
-  mutate(identified_as = case_when(p.value < 0.05 ~ "Significant",
-                                   TRUE ~ "Non-significant"))
+# Add more model statistics using broom
+model_nested <- model_nested %>%
+  mutate(tidymodel = map(.x = model, .f = ~tidy(.x))) %>%
+  unnest(tidymodel) 
 
 # Unnest the data again for later plotting
-data_log2_unnested <- data_log2_nested %>%
+model_unnested <- model_nested %>%
+  select(-model) %>%
   unnest(data) 
 
-try <- data_log2_nested %>%
-  mutate(fit = map(mdl, ~ .$fitted.values))
-
-try_unnested <- try %>%
-  unnest(data) %>%
-  unnest(fit)
-
-try_unnested %>%
-  select("gene" == 43891) %>%
-  ggplot(aes(x = time, y = fit)) +
-  geom_point()
-  
 # Different DE expression analysis that uses all replicates ---------------
 
 set.seed(934485)
 
-data = read_tsv("data/03_data_normalized_mean_across_replicates.tsv") %>% 
+data_DE <- data %>% 
   group_by(genes) %>% 
   nest() %>% 
   ungroup() %>% 
   unnest(cols = data)
 
-data_DE_analysis_nested <- data %>% 
+data_DE_analysis_nested <- data_DE %>% 
   group_by(time, genes) %>% 
   nest() %>% 
   mutate(mdl = map(.x = data,
-                            .f = ~glm(data = .x,
-                                     formula = normalized_counts ~ treatment))) 
+                   .f = ~glm(data = .x,
+                   formula = normalized_counts ~ treatment))) 
 
 data_tidy_model <- data_DE_analysis_nested %>% 
   mutate(mdl_tidy = map(.x = mdl, ~tidy(.x,conf.int=TRUE)))
@@ -100,5 +73,5 @@ augmented_model_results <- unnested_tidy_model %>%
 # Write data --------------------------------------------------------------
 write_tsv(augmented_model_results, 
           file = "results/05_individual_times_ttest_and_data.tsv")
-write_tsv(data_log2_unnested, 
-          file = "results/05_linear_model_results.tsv")
+write_tsv(model_unnested, 
+          file = "results/05_linear_model_time_results.tsv")

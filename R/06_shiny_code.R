@@ -2,6 +2,7 @@
 library("tidyverse")
 library("shiny")
 library("shinythemes")
+library("patchwork")
 
 setwd("/cloud/project")
 source(file = "R/99_functions.R")
@@ -14,13 +15,19 @@ data_for_plot_raw
 # Wrangle data ------------------------------------------------------------
 #prepare data for plot
 data_for_plot <- data_for_plot_raw %>%
-  pivot_longer(cols = c(-treatment, time),
+  pivot_longer(cols = c(-treatment, -time),
                names_to = "genes",
                values_to = "log_fold_change") 
 
-# Loading data for one of the subpanels: 
+
+
+# Loading data first panel ------------------------------------------------
+
+
 data_times_seperated <- read_tsv("results/05_individual_times_ttest_and_data.tsv") %>% 
   mutate(time_as_numeric = as.numeric(str_extract(time, "\\d+"))) 
+
+data_time_model <- read_tsv("results/05_linear_model_time_results.tsv")
 
 # making list of genes to choose between: 
 unique_gene_names <- data_times_seperated %>% 
@@ -28,7 +35,19 @@ unique_gene_names <- data_times_seperated %>%
   distinct() %>% 
   arrange(genes)
 
+#chosing only variables needed forplotting 
+time_model_for_plotting <- data_time_model %>% 
+  rename(time_stamp = time) %>% 
+  pivot_wider(names_from = term,
+              values_from = c(estimate, std.error),
+              id_cols = c(Gene, time_stamp, LogFC))
+
+# Loading data second panel -----------------------------------------------
+
 data_tab2 <- read_tsv("data/03_data_aug_sorted.tsv")
+
+
+
 
 # App creation ------------------------------------------------------------
 # Define UI
@@ -57,8 +76,13 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
 
 # Define server function  
 server <- function(input, output) {
+  # tab 1 tibble for top panel 
+  
   temp_tibble_for_plotting <- reactive(data_times_seperated  %>% 
     filter(genes == input$Selected_gene))
+  
+  tibble_for_time_model <- reactive(time_model_for_plotting %>% 
+    filter(Gene == input$Selected_gene))
   
   #tab2
   data_sorted_long <- reactive(
@@ -79,7 +103,18 @@ server <- function(input, output) {
     labs(x = "Time",
          y = "Normalized Counts") + 
     theme_minimal()
-    })
+
+  })
+  output$myplot2 <- renderPlot({
+      ggplot(tibble_for_time_model(),
+             mapping = aes(x = time_stamp, y = LogFC)) + 
+      geom_point() + 
+      geom_abline(mapping = aes(intercept=mean(`estimate_(Intercept)`),
+                                slope=mean(estimate_time))) +
+      theme_minimal() +
+      labs(x = "Time [Hours]",
+           y = "Log2 Fold change")
+  })
   
   #plot2 
   output$plot2 <- renderPlot({
