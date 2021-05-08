@@ -13,10 +13,6 @@ data_log2 <- read_tsv(file = "data/03_data_mean_log2_diff.tsv")
 data_log2_long <- data_log2 %>%
   pivot_longer(-time, names_to = "gene", values_to = "log2_expr_level") 
 
-data_log2_long %>%
-  ggplot(mapping = aes(x = time, y = log2_expr_level, group = gene)) +
-  geom_line(alpha = 1/4)
-
 # Converting to nested data
 data_log2_nested <- data_log2_long %>%
   group_by(gene) %>%
