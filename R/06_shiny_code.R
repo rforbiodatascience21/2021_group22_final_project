@@ -2,6 +2,7 @@
 library("tidyverse")
 library("shiny")
 library("shinythemes")
+library("patchwork")
 
 setwd("/cloud/project")
 source(file = "R/99_functions.R")
@@ -38,7 +39,7 @@ unique_gene_names <- data_times_seperated %>%
 time_model_for_plotting <- data_time_model %>% 
   rename(time_stamp = time) %>% 
   pivot_wider(names_from = term,
-              values_from = estimate,
+              values_from = c(estimate, std.error),
               id_cols = c(Gene, time_stamp, LogFC))
 
 # Loading data second panel -----------------------------------------------
@@ -58,7 +59,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                                              choices = unique_gene_names,
                                                              selected = "SPIKE_WCPV",
                                                              options = list(maxItems = 1))),
-                                    mainPanel(plotOutput("myplot2"))
+                                    mainPanel(plotOutput("myplot"))
                                     ),
                            tabPanel("Plot top genes",
                                     sidebarPanel(sliderInput("numGenes", "Number of genes: ",
@@ -102,12 +103,17 @@ server <- function(input, output) {
     labs(x = "Time",
          y = "Normalized Counts") + 
     theme_minimal()
+
   })
   output$myplot2 <- renderPlot({
       ggplot(tibble_for_time_model(),
              mapping = aes(x = time_stamp, y = LogFC)) + 
       geom_point() + 
-      geom_abline(mapping = aes(intercept=mean(`(Intercept)`), slope=mean(time)))
+      geom_abline(mapping = aes(intercept=mean(`estimate_(Intercept)`),
+                                slope=mean(estimate_time))) +
+      theme_minimal() +
+      labs(x = "Time [Hours]",
+           y = "Log2 Fold change")
   })
   
   #plot2 
