@@ -3,11 +3,18 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-## Aim
+## Description
+### Aim
 The goal of project is to perform a full, tidy data analysis of the proteomics data. 
 
-## Data
+### Data
 The LC-MS/MS proteomics data was obtained from the article [Proteomics of SARS-CoV-2-infected host cells reveals therapy targets](https://www.nature.com/articles/s41586-020-2332-7?fbclid=IwAR3HEcdWjX3-4zTxGjXoiOtb2ol6iBMM6zt4uZ-ycECLEuu31KNJT_5uqaQ) by Bojkova et al. 
+
+### Repository overview
+Input the repository figure when done
+
+### Shiny app
+Input link for shiny app
 
 ## Authors
 This project was made by:  
