@@ -15,6 +15,10 @@ data_log2_long <- data_log2 %>%
   select(-NFIC) %>% #Still trouble with Inf and this gene -> clean
   pivot_longer(-time, names_to = "gene", values_to = "log2_expr_level") 
 
+data_log2_long %>%
+  ggplot(mapping = aes(x = time, y = log2_expr_level, group = gene)) +
+  geom_line(alpha = 1/4)
+
 # Converting to nested data
 data_log2_nested <- data_log2_long %>%
   group_by(gene) %>%
@@ -31,7 +35,7 @@ data_log2_nested <- data_log2_nested %>%
   mutate(mdl_tidy = map(mdl, ~tidy(.x, conf.int = TRUE))) %>% 
   unnest(mdl_tidy)
 
-# Looking only at slopes
+# Looking only at slopes and not intercepts
 data_log2_nested <- data_log2_nested %>% 
   filter(str_detect(term, "time"))
 
@@ -42,7 +46,10 @@ data_log2_nested <- data_log2_nested %>%
          gene_label = case_when(identified_as == "Significant" ~ gene,
                                 identified_as == "Non-significant" ~ ""))
 
-
+data_log2_unnested <- data_log2_nested %>%
+  unnest(data) %>%
+  select(-mdl) 
+  
 # Different DE expression analysis that uses all replicates ---------------
 
 set.seed(934485)
@@ -84,3 +91,5 @@ augmented_model_results <- unnested_tidy_model %>%
 # Write data --------------------------------------------------------------
 write_tsv(augmented_model_results, 
           file = "results/05_individual_times_ttest_and_data.tsv")
+write_tsv(data_log2_unnested, 
+          file = "results/05_linear_model_results.tsv")
