@@ -72,8 +72,10 @@ new_data_mean_log2_diff <- new_data_mean_log2_diff_long %>%
   pivot_wider(names_from = "genes", values_from = "log2_diff")
 
 ## Signes bud sort ---------------
+# Sort the genes by log2_diff and then time (high to low)
 sorted_genes <- new_data_mean_log2_diff_long %>%
   arrange(desc(log2_diff)) %>%
+  arrange(desc(time)) %>%
   select(genes, time)
 
 # Change the dataframe with means to fit the long format
@@ -84,7 +86,7 @@ data_mean_long <- data_mean %>%
 sorted_means <- sorted_genes %>%
   full_join(x = ., y = data_mean_long, by = c("genes", "time"))
 
-# Convert the means back to tidy data format
+# Convert the sorted means back to tidy data format
 sorted_means_wide <- sorted_means %>%
   pivot_wider(names_from = "genes", values_from = "counts")
 
