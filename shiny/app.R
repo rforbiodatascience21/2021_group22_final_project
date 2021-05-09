@@ -4,11 +4,11 @@ library("shiny")
 library("shinythemes")
 library("patchwork")
 
-setwd("/cloud/project/shiny")
-source(file = "/cloud/project/R/99_functions.R")
+#setwd("/cloud/project/shiny")
+source(file = "99_functions.R")
 
 # Load data ---------------------------------------------------------------
-data_for_plot_raw <- read_tsv("/cloud/project/data/03_data_mean_log2.tsv")
+data_for_plot_raw <- read_tsv("03_data_mean_log2.tsv")
 data_for_plot_raw
 
 # Wrangle data ------------------------------------------------------------
@@ -23,10 +23,10 @@ data_for_plot <- data_for_plot_raw %>%
 # Loading data first panel ------------------------------------------------
 
 
-data_times_seperated <- read_tsv("/cloud/project/results/05_individual_times_ttest_and_data.tsv") %>% 
+data_times_seperated <- read_tsv("05_individual_times_ttest_and_data.tsv") %>% 
   mutate(time_as_numeric = as.numeric(str_extract(time, "\\d+"))) 
 
-data_time_model <- read_tsv("/cloud/project/results/05_linear_model_time_results.tsv")
+data_time_model <- read_tsv("05_linear_model_time_results.tsv")
 
 # making list of genes to choose between: 
 unique_gene_names <- data_times_seperated %>% 
@@ -43,7 +43,7 @@ time_model_for_plotting <- data_time_model %>%
 
 # Loading data second panel -----------------------------------------------
 
-data_tab2 <- read_tsv("/cloud/project/data/03_data_aug_sorted.tsv")
+data_tab2 <- read_tsv("03_data_aug_sorted.tsv")
 
 
 

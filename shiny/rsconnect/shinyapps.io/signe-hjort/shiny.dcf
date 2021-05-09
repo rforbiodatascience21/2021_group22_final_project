@@ -5,7 +5,9 @@ account: signe-hjort
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4103355
-bundleId: 4576919
+bundleId: 4577005
 url: https://signe-hjort.shinyapps.io/shiny/
-when: 1620564836.88951
-lastSyncTime: 1620564836.88952
+when: 1620567182.91164
+lastSyncTime: 1620567182.91165
+asMultiple: FALSE
+asStatic: FALSE
