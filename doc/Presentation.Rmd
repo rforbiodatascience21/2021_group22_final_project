@@ -1,38 +1,53 @@
 ---
-title: "Final Project: SARS-CoV-2 protein expression"
+title: "SARS-CoV-2 protein expression"
+subtitle: "Final project in R for Bio Data Science (22100)"
+author: "Alban Laus Obel Slabowska (s200347), Astrid Rasmussen (s193254), Jens Waaben (s205972), Signe Katrine Hjort (s174587), Signe Fischer Ravn (s175410)"
+date: 12-05-2021
 output:
   ioslides_presentation:
     widescreen: true
-
+runtime: shiny
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
+library(knitr)
+library(tidyverse)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Overall aim of project
+# Introduction
+
+## Project background
+- SARS-CoV-2 emerged at the end of 2019 as the cause of COVID-19.
+- High infectivity has resulted in a still ongoing pandemic.
+- There is no current treatment.
+
+## Project data and aim
+*Aim: To analyse proteomics data and communicate the findings to non-bioinformaticians in a way that enables them to get information about their genes of choice.  *
+
+- Data from 
+  - Use proteomics to get a profile of the host cell response to infection with SARS-CoV-2.
+  - Determine genes and pathways that are altered during infection.
+  
 
 ## Project overview and structure
-
-insert picture of structure
-
-# Introduction:
-
-## Problem statement
-
-## Overall aim of project
-
-## Project overview and structure
-
-
+![Placeholder](/cloud/project/results/04_PCA_plot.png)
+**insert picture of structure**
 
 # Materials and methods
 
-## Dataset origin
-
 ## Data cleaning
+- Dataset consisting of two files to be joined: Gene counts and sample information.  
+- Prepare datasets for joining:  
+  - Remove unwanted columns.  
+  - Replace zeroes with very low values.
+  - Rename variables.
+- inner_join()
 
 ## Data augmentation
+- Find and normalize mean within each group of replicates.
+
+
 
 ## Exploratory data analysis
 
@@ -41,11 +56,20 @@ insert picture of structure
 
 # Results
 
-## Making a Shiny app
+---
+plots and tables
+![](/cloud/project/results/04_PCA_plot.png)
+---
+![](/cloud/project/results/Heatmap.png)
+
+
+## Shiny app
+```{r, echo=FALSE}
+include_app("URL", height = "500px")
+```
 
 
 # Discussion
 
-## bla bla
-
+* Benefit if had done gene ontology  ??
 
