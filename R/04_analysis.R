@@ -176,12 +176,12 @@ K_means_plot <- K_means_data %>%
 # Write data ------------------------------------------------------------
 # Save heatmap
 ggsave(path = "results",
-       filename = "Heatmap.png", 
+       filename = "04_Heatmap.png", 
        plot = heatmap_plot )
 
 # Save top expression
 ggsave(path = "results",
-       filename = paste("diffexpGenes_top",
+       filename = paste("04_diffexpGenes_top",
                         as.character(num_genes),
                         ".png", sep=""), 
        plot = top_expression_plot)
