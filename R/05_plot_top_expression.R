@@ -5,7 +5,7 @@ rm(list = ls())
 library("tidyverse")
 
 # Load data ---------------------------------------------------------------
-data_sorted <- read_tsv(file = "data/03_data_mean_log2.tsv")
+data_sorted <- read_tsv(file = "data/03_data_aug_sorted.tsv")
 
 # Wrangle data ------------------------------------------------------------
 num_genes <- 20
@@ -13,7 +13,7 @@ num_genes <- 20
 # Select the top n differentially expressed genes for plotting
 # Then pivot longer to get 1 gene per row
 data_sorted_long <- data_sorted %>%
-  select(1:all_of(num_genes+2)) %>% # is this base R maybe change?
+  select(1:all_of(num_genes+2)) %>% # is this base R maybe change? -(3:last_col(num_genes))
   pivot_longer(!c(treatment, time),
                names_to = "gene",
                values_to = "count")
