@@ -5,7 +5,7 @@ rm(list = ls())
 library("tidyverse")
 
 # Load data ---------------------------------------------------------------
-data_sorted <- read_tsv(file = "data/03_data_aug_sorted.tsv")
+data_sorted <- read_tsv(file = "data/03_genes_sorted_by_highest_logFC_per_time.tsv")
 
 # Wrangle data ------------------------------------------------------------
 num_genes <- 20

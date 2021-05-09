@@ -106,7 +106,7 @@ write_tsv(x = data_log2,
           file = "data/03_data_log2_of_replicate_means.tsv")
 
 write_tsv(x = sorted_means_wide,
-          file = "data/03_data_aug_sorted.tsv")
+          file = "data/03_genes_sorted_by_highest_logFC_per_time.tsv")
 
 write_tsv(x = log2_diff,
           file = "data/03_data_logFC_for_time.tsv")
