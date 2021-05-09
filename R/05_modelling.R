@@ -7,7 +7,7 @@ library("broom")
 
 # Load data ---------------------------------------------------------------
 data_log2 <- read_tsv(file = "data/03_data_mean_log2_diff.tsv")
-data <- read_tsv("data/03_data_normalized_mean_across_replicates.tsv")
+data <- read_tsv(file = "data/03_data_means.tsv")
 
 # Wrangle data ------------------------------------------------------------
 # General linear model -----------------------
@@ -33,10 +33,10 @@ model_unnested <- model_nested %>%
   unnest(data) 
 
 # Different DE expression analysis that uses all replicates ---------------
-
+# Calculating normalized mean expression across replicates for every experiment
 set.seed(934485)
 
-data_DE <- data %>% 
+data_DE <-  data %>% 
   group_by(genes) %>% 
   nest() %>% 
   ungroup() %>% 
@@ -50,24 +50,17 @@ data_DE_analysis_nested <- data_DE %>%
                    formula = normalized_counts ~ treatment))) 
 
 data_tidy_model <- data_DE_analysis_nested %>% 
-  mutate(mdl_tidy = map(.x = mdl, ~tidy(.x,conf.int=TRUE)))
-
-unnested_tidy_model <- data_tidy_model %>% 
+  mutate(mdl_tidy = map(.x = mdl, ~tidy(.x, conf.int=TRUE))) %>%
   unnest(mdl_tidy)
 
-augmented_model_results <- unnested_tidy_model %>% 
+augmented_model_results <- data_tidy_model %>% 
   mutate(regulation = case_when(estimate > 0 ~ "Upregulated",
                                 estimate < 0 ~ "Downregulated"),
          significance = case_when(p.value >= 0.05 ~ "Not significant",
                                   p.value < 0.05 ~ "Significant")) %>% 
   filter(term == "treatmentVirus") %>% 
-  select(genes,
-         time,
-         data,
-         estimate,
-         p.value, 
-         regulation,
-         significance) %>% 
+  select(genes, time, data, estimate, 
+         p.value, regulation, significance) %>% 
   unnest(data)
 
 # Write data --------------------------------------------------------------

@@ -8,7 +8,7 @@ library("patchwork")
 library("ggrepel")
 
 # Load data ---------------------------------------------------------------
-data_heatmap <- read_tsv("data/03_data_normalized_mean_across_replicates.tsv")
+data_heatmap <- read_tsv("data/03_data_means.tsv")
 data_top_expr <- read_tsv(file = "data/03_data_mean_log2.tsv")
 data_PCA_kmeans <- read_tsv("data/03_data_normalized_counts_and_raw_counts.tsv") 
 
@@ -173,19 +173,21 @@ K_means_plot <- K_means_data %>%
        color = "Cluster") + 
   geom_label_repel(mapping = aes(label = experiment), size = 2.5)
 
+
 # Write data ------------------------------------------------------------
 # Save heatmap
 ggsave(path = "results",
-       filename = "Heatmap.png", 
+       filename = "04_Heatmap.png", 
        plot = heatmap_plot )
 
 # Save top expression
 ggsave(path = "results",
-       filename = paste("diffexpGenes_top",
+       filename = str_c("04_diffexpGenes_top",
                         as.character(num_genes),
-                        ".png", sep=""), 
+                        ".png"), 
        plot = top_expression_plot)
 
+# Save PCA and K-means plots
 ggsave(path = "results",
        filename = "04_PCA_plot.png",
        plot = PCA_plot)
