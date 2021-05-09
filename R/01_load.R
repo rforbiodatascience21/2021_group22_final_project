@@ -14,7 +14,7 @@ my_data_raw_samples <- read_csv("data/_raw/samples.csv")
 
 # Write data
 write_tsv(x = my_data_raw_counts,
-          file = "data/01_my_data_counts.tsv")
+          file = "data/01_data_counts.tsv")
 
 write_tsv(x = my_data_raw_samples,
-          file = "data/01_my_data_samples.tsv")
+          file = "data/01_data_samples.tsv")

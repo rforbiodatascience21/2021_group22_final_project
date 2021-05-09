@@ -6,8 +6,8 @@ rm(list = ls())
 library("tidyverse")
 
 # Load data ---------------------------------------------------------------
-my_data_counts <- read_tsv(file = "data/01_my_data_counts.tsv")
-my_data_samples <- read_tsv(file = "data/01_my_data_samples.tsv")
+my_data_counts <- read_tsv(file = "data/01_data_counts.tsv")
+my_data_samples <- read_tsv(file = "data/01_data_samples.tsv")
 
 # Wrangle data ------------------------------------------------------------
 
@@ -33,4 +33,4 @@ my_data_clean <- inner_join(my_data_samples, my_data_counts_wide, by="experiment
 
 # Write data --------------------------------------------------------------
 write_tsv(x = my_data_clean,
-          file = "data/02_my_data_clean.tsv")
+          file = "data/02_data_clean.tsv")

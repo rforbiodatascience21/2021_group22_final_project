@@ -1,15 +1,13 @@
 # Clear workspace ---------------------------------------------------------
 rm(list = ls())
 
-
 # Load libraries ----------------------------------------------------------
 library("tidyverse")
 
 # Load data ---------------------------------------------------------------
-data_sorted <- read_tsv(file = "data/03_data_mean_log2.tsv")
 data_normalized <- read_tsv("data/03_data_normalized_mean_across_replicates.tsv")
-# Wrangle data ------------------------------------------------------------
 
+# Wrangle data ------------------------------------------------------------
 data_normalized_long <- data_normalized %>%
   unite("experiment", treatment, time, sep = "_", remove = TRUE) %>%
   select(experiment, genes, mean_over_replicates) %>%
@@ -25,19 +23,8 @@ data_zscore <- data_normalized_long %>%
   ungroup() %>%
   select(experiment, genes, z_score)
 
-# Find the top 500 deferentially expressed genes to plot
-data_sorted_long <- data_sorted %>%
-  select(0:502) %>%
-  pivot_longer(!c(treatment, time),
-               names_to = "genes",
-               values_to = "count") %>%
-  distinct(genes)
-
-# Only keep z-score for the top n deferentially expressed genes chosen earlier
-data_plot <- semi_join(data_zscore, data_sorted_long, by="genes")
-
 # Plot and save heatmap
-data_plot %>%
+data_zscore %>%
   mutate(experiment = as_factor(experiment)) %>%
   ggplot(aes(y=genes, x=experiment, fill=z_score)) + 
   geom_tile() +
@@ -46,6 +33,7 @@ data_plot %>%
         axis.text.y = element_blank())
 
 
+# Write data ------------------------------------------------------------
 ggsave(path = "results",
        filename = "Heatmap.png")
 
