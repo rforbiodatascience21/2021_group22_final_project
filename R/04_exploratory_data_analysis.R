@@ -1,15 +1,19 @@
-# First some exploratory plots showing if the samples are equal: 
+# Clear workspace ---------------------------------------------------------
+rm(list = ls())
 
+# Load libraries ----------------------------------------------------------
 library("tidyverse")
 library("broom")
 library("patchwork")
 library("ggrepel")
 
+# Load data ---------------------------------------------------------------
+data <- read_tsv("data/03_normalized_counts_and_raw_counts.tsv") 
 
 # Checking normalization --------------------------------------------------
 
 # Importing normalized count data 
-data = read_tsv("data/03_normalized_counts_and_raw_counts.tsv") %>% 
+data <- data %>% 
   arrange(time_as_numeric) %>% 
   mutate(time = as_factor(time))
 
@@ -26,7 +30,6 @@ ggplot(data = data, mapping = aes(x = treatment, y = normalized_counts, fill = t
 
 
 # Performing PCA on normalized data to see groupings ----------------------
-
 
 # Importing normalized count data for PCA
 PCA_data = read_tsv("data/03_data_normalized_counts_and_raw_counts.tsv") %>% 
