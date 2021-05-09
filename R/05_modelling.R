@@ -6,8 +6,8 @@ library("tidyverse")
 library("broom")
 
 # Load data ---------------------------------------------------------------
-data_log2 <- read_tsv(file = "data/03_data_mean_log2_diff.tsv")
-data <- read_tsv(file = "data/03_data_means.tsv")
+data_log2 <- read_tsv(file = "data/03_data_logFC_for_time.tsv")
+data <- read_tsv(file = "data/03_data_normalized_count_mean_over_replicates.tsv")
 
 # Wrangle data ------------------------------------------------------------
 # General linear model -----------------------

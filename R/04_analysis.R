@@ -8,8 +8,8 @@ library("patchwork")
 library("ggrepel")
 
 # Load data ---------------------------------------------------------------
-data_heatmap <- read_tsv("data/03_data_means.tsv")
-data_top_expr <- read_tsv(file = "data/03_data_mean_log2.tsv")
+data_heatmap <- read_tsv("data/03_data_normalized_count_mean_over_replicates.tsv")
+data_top_expr <- read_tsv(file = "data/03_data_log2_of_replicate_means.tsv")
 data_PCA_kmeans <- read_tsv("data/03_data_normalized_counts_and_raw_counts.tsv") 
 
 # Heat map ----------------------------------------------------------
@@ -89,6 +89,7 @@ top_expression_plot <- ggplot(data = gene_plot_data,
   ggtitle(gene_name)
 
 # PCA and Kmeans ----------------------------------------------------------
+
 data_time_as_factor_correct_order <- data_PCA_kmeans %>% 
   arrange(time_as_numeric) %>% 
   mutate(time = as_factor(time))

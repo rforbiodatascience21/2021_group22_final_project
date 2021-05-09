@@ -100,15 +100,15 @@ write_tsv(x = data_normalized,
           file = "data/03_data_normalized_counts_and_raw_counts.tsv")
 
 write_tsv(x = data_normalized_mean_across_replicates,
-          file = "data/03_data_means.tsv")
+          file = "data/03_data_normalized_count_mean_over_replicates.tsv")
 
 write_tsv(x = data_log2,
-          file = "data/03_data_mean_log2.tsv")
+          file = "data/03_data_log2_of_replicate_means.tsv")
 
 write_tsv(x = sorted_means_wide,
           file = "data/03_data_aug_sorted.tsv")
 
 write_tsv(x = log2_diff,
-          file = "data/03_data_mean_log2_diff.tsv")
+          file = "data/03_data_logFC_for_time.tsv")
 
 
