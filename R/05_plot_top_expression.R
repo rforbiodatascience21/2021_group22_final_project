@@ -1,8 +1,13 @@
+# Clear workspace ---------------------------------------------------------
+rm(list = ls())
+
+# Load libraries ----------------------------------------------------------
 library("tidyverse")
 
+# Load data ---------------------------------------------------------------
 data_sorted <- read_tsv(file = "data/03_data_mean_log2.tsv")
 
-
+# Wrangle data ------------------------------------------------------------
 num_genes <- 20
 
 # Select the top n differentially expressed genes for plotting
@@ -12,7 +17,6 @@ data_sorted_long <- data_sorted %>%
   pivot_longer(!c(treatment, time),
                names_to = "gene",
                values_to = "count")
-
 
 order_names <- data_sorted_long %>%
   ungroup() %>%
@@ -32,12 +36,6 @@ ggplot(data = data_sorted_long,
   xlab("Top genes (by differential expression)") +
   ylab("log(count)") +
   scale_y_log10()
-
-ggsave(path = "results",
-       filename = paste("diffexpGenes_top",
-                        as.character(num_genes),
-                        ".png", sep=""))
-
 
 gene_num <- 2
 gene_name <- order_names[gene_num]
@@ -59,5 +57,9 @@ ggplot(data = gene_plot_data,
   scale_size(guide = 'none') +
   ggtitle(gene_name)
   
-
+# Write data --------------------------------------------------------------
+ggsave(path = "results",
+       filename = paste("diffexpGenes_top",
+                        as.character(num_genes),
+                        ".png", sep=""))
 
