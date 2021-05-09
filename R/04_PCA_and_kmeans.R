@@ -28,8 +28,6 @@ ggplot(data = data_time_as_factor_correct_order,
   theme_minimal() + 
   labs(y = "Log10-scaled normalized counts", x = "Infection")
 
-
-
 # Performing PCA on normalized data to see groupings ----------------------
 
 # Importing normalized count data for PCA

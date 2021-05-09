@@ -1,14 +1,13 @@
 # Clear workspace ---------------------------------------------------------
 rm(list = ls())
 
-
 # Load libraries ----------------------------------------------------------
 library("tidyverse")
 
 # Load data ---------------------------------------------------------------
 data_normalized <- read_tsv("data/03_data_normalized_mean_across_replicates.tsv")
-# Wrangle data ------------------------------------------------------------
 
+# Wrangle data ------------------------------------------------------------
 data_normalized_long <- data_normalized %>%
   unite("experiment", treatment, time, sep = "_", remove = TRUE) %>%
   select(experiment, genes, mean_over_replicates) %>%
@@ -34,6 +33,7 @@ data_zscore %>%
         axis.text.y = element_blank())
 
 
+# Write data ------------------------------------------------------------
 ggsave(path = "results",
        filename = "Heatmap.png")
 

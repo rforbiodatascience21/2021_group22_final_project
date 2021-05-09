@@ -37,6 +37,7 @@ ggplot(data = data_sorted_long,
   ylab("log(count)") +
   scale_y_log10()
 
+# Could we do this in tidy
 gene_num <- 2
 gene_name <- order_names[gene_num]
 
