@@ -7,18 +7,20 @@ library("broom")
 library("patchwork")
 library("ggrepel")
 
-# Load data ---------------------------------------------------------------
-data <- read_tsv("data/03_normalized_counts_and_raw_counts.tsv") 
+# Load normalized count data  ---------------------------------------------------------------
+data <- read_tsv("data/03_data_normalized_counts_and_raw_counts.tsv") 
 
 # Checking normalization --------------------------------------------------
 
-# Importing normalized count data 
-data <- data %>% 
+data_time_as_factor_correct_order <- data %>% 
   arrange(time_as_numeric) %>% 
   mutate(time = as_factor(time))
 
 # plotting boxplots to see if normalization worked
-ggplot(data = data, mapping = aes(x = treatment, y = normalized_counts, fill = time)) +
+ggplot(data = data_time_as_factor_correct_order,
+       mapping = aes(x = treatment,
+                     y = normalized_counts,
+                     fill = time)) +
   geom_boxplot(alpha = 0.7) +
   scale_y_log10() + 
   facet_wrap(~replicate) + 
@@ -31,7 +33,7 @@ ggplot(data = data, mapping = aes(x = treatment, y = normalized_counts, fill = t
 # Performing PCA on normalized data to see groupings ----------------------
 
 # Importing normalized count data for PCA
-PCA_data = read_tsv("data/03_data_normalized_counts_and_raw_counts.tsv") %>% 
+PCA_data <- data_time_as_factor_correct_order %>% 
   select(experiment,genes,counts,time) %>% 
   pivot_wider(values_from = counts,
               names_from = genes)
@@ -71,7 +73,8 @@ biplot_PCA <- augment_PCA %>%
   geom_point(size = 3) + 
   labs(x = "PC 1", 
        y = "PC 2") + 
-  theme_minimal()
+  theme_minimal() + 
+  scale_color_viridis_d()
 
 
 # combining plots
