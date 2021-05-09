@@ -100,3 +100,7 @@ K_means_plot <- K_means_data %>%
 ggsave(filename = "results/04_PCA_plot.png",
        plot = PCA_plot,
        device = "png")
+
+ggsave(filename = "results/04_Kmeans_plot.png",
+       plot = K_means_plot,
+       device = "png")

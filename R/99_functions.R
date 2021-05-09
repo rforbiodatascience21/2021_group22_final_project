@@ -1,9 +1,5 @@
 # Project functions ------------------------------------------------
 
-#CLR_transform <- function(tibble, ){
-#  
-#}
-
 
 top_genes_wide_to_long <- function(data, num_genes){
   data_sorted_long <- data %>%
