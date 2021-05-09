@@ -8,7 +8,6 @@ library("tidyverse")
 data_clean <- read_tsv(file = "data/02_data_clean.tsv")
 
 # Wrangle data ------------------------------------------------------------
-
 # Normalize data, change time variable to numeric
 data_normalized <- data_clean %>% 
   pivot_longer(cols = c(-treatment,
@@ -23,8 +22,6 @@ data_normalized <- data_clean %>%
          time_as_numeric = as.numeric(str_extract(time, "\\d+"))) %>%    #time as numeric
   ungroup() 
 
-
-
 # Take mean across of each set of replicates, change time variable to numeric
 data_mean <- data_clean %>%
   select(-replicate) %>%
@@ -35,11 +32,6 @@ data_mean <- data_clean %>%
 # Log2 transform all gene expression variables
 data_mean_log2 <- data_mean %>%
   mutate_at(vars(-c(treatment, time)), log2)
-
-# Calculate the difference between virus and control expression for each time-point
-data_mean_log2_diff <- data_mean_log2 %>% 
-  group_by(time) %>%
-  summarise_if(is.numeric, diff)          #virus minus control eller omvendt?
 
 ## Signes bud på log2 difference -----------
 # Calculate log2 diff (Maybe change names)
@@ -73,6 +65,12 @@ sorted_means <- sorted_genes %>%
 # Convert the sorted means back to tidy data format
 sorted_means_wide <- sorted_means %>%
   pivot_wider(names_from = "genes", values_from = "counts")
+
+## Original log2 ----------
+# Calculate the difference between virus and control expression for each time-point
+data_mean_log2_diff <- data_mean_log2 %>% 
+  group_by(time) %>%
+  summarise_if(is.numeric, diff)          #virus minus control eller omvendt?
 
 ## original sort -----------
 # Extract order of highest differential expression based on 2, 6, 10 or 24 hours
