@@ -17,7 +17,6 @@ data <- data %>%
   arrange(time_as_numeric) %>% 
   mutate(time = as_factor(time))
 
-
 # plotting boxplots to see if normalization worked
 ggplot(data = data, mapping = aes(x = treatment, y = normalized_counts, fill = time)) +
   geom_boxplot(alpha = 0.7) +
@@ -75,13 +74,8 @@ biplot_PCA <- augment_PCA %>%
   theme_minimal()
 
 
-# combining plots and saving
+# combining plots
 PCA_plot <- scree_plot / biplot_PCA
-
-ggsave(filename = "results/04_PCA_plot.png",
-       plot = PCA_plot,
-       device = "png")
-
 
 # Doing K-means on PCA transformed counts ---------------------------------
 
@@ -102,4 +96,7 @@ K_means_plot <- K_means_data %>%
        color = "Cluster") + 
   geom_label_repel(mapping = aes(label = experiment), size = 2.5)
 
-
+# Write data --------------------------------------------------------------
+ggsave(filename = "results/04_PCA_plot.png",
+       plot = PCA_plot,
+       device = "png")
