@@ -53,16 +53,30 @@ data_mean_log2 <- data_mean %>%
   mutate_at(vars(-c(treatment, time)), log2)
 
 # Calculate the difference between virus and control expression for each time-point
-# Move time variable to rownames
 data_mean_log2_diff <- data_mean_log2 %>% 
   group_by(time) %>%
   summarise_if(is.numeric, diff)          #virus minus control eller omvendt?
 
-data_mean_log2_diff_2 <- data_mean_log2_diff %>% 
-  column_to_rownames(var = "time")
+# Signes bud på log2
+# Calculate log2 diff (Maybe change names)
+new_data_mean_log2_diff <- data_mean_log2 %>%
+  pivot_longer(cols = c(-time, -treatment), names_to = "genes", values_to = "log2") %>%
+  pivot_wider(names_from = "treatment", values_from = "log2") %>%
+  group_by(time) %>% 
+  mutate(log2_diff = Virus-Control) %>%
+  ungroup()
+
+# Convert back to tidy data (maybe change names)
+new_data_mean_log2_diff <- new_data_mean_log2_diff %>%
+  select(-Virus, -Control) %>%
+  pivot_wider(names_from = "genes", values_from = "log2_diff")
 
 
 # Extract order of highest differential expression based on 2, 6, 10 or 24 hours
+# Put time in rows
+data_mean_log2_diff_2 <- data_mean_log2_diff %>% 
+  column_to_rownames(var = "time")
+
 rownum <- 4   # 4 = 24h
 sort <- data_mean_log2_diff_2 %>%
   slice(rownum) %>% 
@@ -87,7 +101,7 @@ write_tsv(x = data_mean_log2,
 write_tsv(x = data_sorted,
           file = "data/03_data_aug_sorted.tsv")
 
-write_tsv(x = data_mean_log2_diff,
+write_tsv(x = new_data_mean_log2_diff,
           file = "data/03_data_mean_log2_diff.tsv")
 
 
