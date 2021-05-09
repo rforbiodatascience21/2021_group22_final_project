@@ -14,9 +14,14 @@ my_data_samples <- read_tsv(file = "data/01_data_samples.tsv")
 #Prepare counts dataset for joining and replace zero values with low value 
 my_data_counts_wide <- my_data_counts %>% 
   rename(genes = X1) %>%
-  pivot_longer(-genes, names_to = "experiment", values_to = "expression") %>%
-  mutate(expression = replace(expression, expression == 0, 0.000001)) %>%
-  pivot_wider(names_from = "genes", values_from = "expression")
+  pivot_longer(cols = -genes,
+               names_to = "experiment",
+               values_to = "expression") %>%
+  mutate(expression = replace(expression,
+                              expression == 0,
+                              0.000001)) %>%
+  pivot_wider(names_from = "genes",
+              values_from = "expression")
 
 
 #Samples
@@ -26,7 +31,9 @@ my_data_samples <- my_data_samples %>%
 
 
 #join dataframes
-my_data_clean <- inner_join(my_data_samples, my_data_counts_wide, by="experiment") %>% 
+my_data_clean <- inner_join(my_data_samples,
+                            my_data_counts_wide,
+                            by="experiment") %>% 
   mutate(experiment = str_replace_all(experiment, c("\\dh$" = "2h_1",
                                                     "[ ]" = "_")))
   
