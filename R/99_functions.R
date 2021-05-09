@@ -10,6 +10,15 @@ top_genes_wide_to_long <- function(data, num_genes){
   return(data_sorted_long)
 }
 
+bottom_genes_wide_to_long <- function(data, num_genes){
+  data_sorted_long <- data_sorted %>%
+    select(-(3:last_col(num_genes))) %>%
+    pivot_longer(!c(treatment, time),
+                 names_to = "gene",
+                 values_to = "count")
+  return(data_sorted_long)
+}
+
 
 top_gene_order <- function(data, num_genes){
   order_names <- data %>%

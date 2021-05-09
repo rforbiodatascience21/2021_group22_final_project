@@ -7,6 +7,8 @@ library("broom")
 library("patchwork")
 library("ggrepel")
 
+source(file = "R/99_functions.R")
+
 # Load data ---------------------------------------------------------------
 data_heatmap <- read_tsv("data/03_data_normalized_count_mean_over_replicates.tsv")
 data_top_expr <- read_tsv(file = "data/03_genes_sorted_by_highest_logFC_per_time.tsv")
@@ -38,23 +40,14 @@ heatmap_plot <- data_zscore %>%
         axis.text.y = element_blank())
 
 # Top expression ----------------------------------------------------------
-num_genes <- 20
 
-# Select the top n differentially expressed genes for plotting
-# Then pivot longer to get 1 gene per row
-data_sorted_long <- data_top_expr %>%
-  select(1:all_of(num_genes+2)) %>% # is this base R maybe change?
-  pivot_longer(!c(treatment, time),
-               names_to = "gene",
-               values_to = "count")
+# Select the top 20 differentially expressed genes for plotting
+n_genes = 20
+data_sorted_long_top20 <- top_genes_wide_to_long(data_top_expr, num_genes = n_genes)
+# Get the order of highest log fold expression
+order_names <- top_gene_order(data_sorted_long20, num_genes = n_genes)
 
-order_names <- data_sorted_long %>%
-  ungroup() %>%
-  slice_head(n=num_genes) %>%
-  pull(gene) %>%
-  factor()
-
-ggplot(data = data_sorted_long,
+ggplot(data = data_sorted_long20,
        mapping = aes(factor(gene, level = order_names),
                      count,
                      color = time,
@@ -67,26 +60,84 @@ ggplot(data = data_sorted_long,
   ylab("log(count)") +
   scale_y_log10()
 
-# Could we do this in tidy
-gene_num <- 2
-gene_name <- order_names[gene_num]
+ggsave(path = "results",
+       filename = paste("04_diffexpGenes_top",
+                        as.character(n_genes),
+                        ".png", sep=""))
 
-gene_plot_data <- data_sorted_long %>%
-  filter(gene == gene_name)
+# Now get just the top 8, as well as the bottom 8 (underexpressed)
+data_sorted_long_top8 <- top_genes_wide_to_long(data_top_expr, num_genes = 8)
 
-top_expression_plot <- ggplot(data = gene_plot_data,
-       aes(time, count,
-           color = treatment,
-           shape = treatment)) +
-  geom_point(aes(size = 1.5,
-                 alpha = 0.85)) +
+data_sorted_long_bottom8 <- bottom_genes_wide_to_long(data_top_expr, num_genes = 8)
+
+# Plot the expression of these selected genes over time
+top_exp_plot <- ggplot(data = data_sorted_long_top8,
+                  aes(time, count,
+                      shape = treatment)) +
+  geom_point(size = 3,
+             alpha = 0.5) +
   scale_y_log10() +
   theme_minimal() +
   ylab("log(count)") +
   scale_x_discrete(limits=c(2, 6, 10, 24)) +
+  
   scale_alpha(guide = 'none') +
   scale_size(guide = 'none') +
-  ggtitle(gene_name)
+  ggtitle("Top 8 overexpressed genes in (virus, 24h)") +
+  
+  geom_line(aes(color = gene)) +
+  geom_text_repel(aes(label=ifelse(time==24, gene, '')),
+                  hjust=2,
+                  size=2.6,
+                  xlim=c(24, 30)) +
+  
+  guides(color=FALSE) +
+  
+  theme(legend.position=c(0.1,0.9),
+        legend.background = element_rect(),
+        plot.margin=unit(c(10,100,10,10), "points")) +
+  
+  coord_cartesian(clip="off")
+
+
+bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
+                     aes(time, count,
+                         shape = treatment)) +
+  geom_point(size = 3,
+             alpha = 0.5) +
+  scale_y_log10() +
+  theme_minimal() +
+  ylab("log(count)") +
+  scale_x_discrete(limits=c(2, 6, 10, 24)) +
+  
+  scale_alpha(guide = 'none') +
+  scale_size(guide = 'none') +
+  ggtitle("Bottom 8 underexpressed genes in (virus, 24h)") +
+  
+  geom_line(aes(color = gene)) +
+  geom_text_repel(aes(label=ifelse(time==24, gene, '')),
+                  hjust=2,
+                  size=2.6,
+                  xlim=c(24, 30)) +
+  
+  guides(color=FALSE) +
+  
+  theme(legend.position=c(0.1,0.1),
+        legend.background = element_rect(),
+        plot.margin=unit(c(10,100,10,10), "points")) +
+  
+  coord_cartesian(clip="off")
+
+
+top_bottom <- top_exp_plot / bottom_exp_plot
+
+top_bottom
+
+ggsave(path = "results",
+       filename = "04_top_and_bottom_8_over_time.png",
+       width = 11,
+       height = 10)
+
 
 # PCA and Kmeans ----------------------------------------------------------
 
