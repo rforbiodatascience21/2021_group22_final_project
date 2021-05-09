@@ -1,4 +1,4 @@
-# this script contains the functions used in the projects: 
+# Project functions ------------------------------------------------
 
 #CLR_transform <- function(tibble, ){
 #  
