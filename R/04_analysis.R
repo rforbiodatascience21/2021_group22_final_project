@@ -8,7 +8,7 @@ library("patchwork")
 library("ggrepel")
 
 # Load data ---------------------------------------------------------------
-data_heatmap <- read_tsv("data/03_data_normalized_mean_across_replicates.tsv")
+data_heatmap <- read_tsv("data/03_data_means.tsv")
 data_top_expr <- read_tsv(file = "data/03_data_mean_log2.tsv")
 data_PCA_kmeans <- read_tsv("data/03_data_normalized_counts_and_raw_counts.tsv") 
 
