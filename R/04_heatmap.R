@@ -6,37 +6,28 @@ rm(list = ls())
 library("tidyverse")
 
 # Load data ---------------------------------------------------------------
-clean_data = read_tsv("data/02_my_data_clean.tsv")
 data_sorted <- read_tsv(file = "data/03_data_mean_log2.tsv")
-
+data_normalized <- read_tsv("data/03_data_normalized_mean_across_replicates.tsv")
 # Wrangle data ------------------------------------------------------------
-# Find mean of replicates
-long_data <- clean_data %>%
-  pivot_longer(cols = c(-experiment, -treatment, -time, -replicate), 
-               names_to = "genes", 
-               values_to = "counts") %>%
-  select(treatment, time, genes, counts) %>%
+
+data_normalized_long <- data_normalized %>%
   unite("experiment", treatment, time, sep = "_", remove = TRUE) %>%
-  group_by(experiment, genes) %>%
-  mutate(mean_counts = sum(counts)/3) %>%
-  select(experiment, genes, mean_counts) %>%
+  select(experiment, genes, mean_over_replicates) %>%
   distinct()
 
 # Calculate z-score
-data_zscore <- long_data %>%
+data_zscore <- data_normalized_long %>%
   group_by(genes) %>%
-  mutate(mean_counts_for_gene = mean(mean_counts),
-         sd_of_counts_for_gene = sd(mean_counts),
-         count_minus_mean = mean_counts-mean_counts_for_gene,
+  mutate(mean_counts_for_gene = mean(mean_over_replicates),
+         sd_of_counts_for_gene = sd(mean_over_replicates),
+         count_minus_mean = mean_over_replicates-mean_counts_for_gene,
          z_score = count_minus_mean/sd_of_counts_for_gene) %>%
   ungroup() %>%
   select(experiment, genes, z_score)
 
-# Find the top n deferentially expressed genes to plot
-num_genes <- 500
-
+# Find the top 500 deferentially expressed genes to plot
 data_sorted_long <- data_sorted %>%
-  select(1:all_of(num_genes+2)) %>%
+  select(0:502) %>%
   pivot_longer(!c(treatment, time),
                names_to = "genes",
                values_to = "count") %>%
