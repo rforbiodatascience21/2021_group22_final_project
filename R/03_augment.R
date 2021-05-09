@@ -5,7 +5,7 @@ rm(list = ls())
 library("tidyverse")
 
 # Load data ---------------------------------------------------------------
-data_clean <- read_tsv(file = "data/02_my_data_clean.tsv")
+data_clean <- read_tsv(file = "data/02_data_clean.tsv")
 
 # Wrangle data ------------------------------------------------------------
 
