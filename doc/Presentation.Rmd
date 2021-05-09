@@ -50,6 +50,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 ## Exploratory data analysis
+- Maybe also some focus on why we chose to do so many different scripts for the plots
 
 ## Modelling
 
