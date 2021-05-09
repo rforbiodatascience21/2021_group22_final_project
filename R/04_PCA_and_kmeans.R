@@ -82,11 +82,12 @@ PCA_plot <- scree_plot / biplot_PCA
 
 # Doing K-means on PCA transformed counts ---------------------------------
 
+set.seed(1)
+
 K_means_data <- augment_PCA %>% 
-  select(.fittedPC1, .fittedPC2) %>% 
+  select(matches("fittedPC[1-5]$")) %>% 
   kmeans(centers = 4) %>% 
-  augment(augment_PCA) %>% 
-  select(.fittedPC1, .fittedPC2, .cluster, experiment, time, treatment)
+  augment(augment_PCA)
 
 K_means_plot <- K_means_data %>% 
   ggplot(mapping = aes(x = .fittedPC1,
