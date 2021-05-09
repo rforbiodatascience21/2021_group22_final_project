@@ -7,7 +7,7 @@ library("broom")
 
 # Load data ---------------------------------------------------------------
 data_log2 <- read_tsv(file = "data/03_data_mean_log2_diff.tsv")
-data <- read_tsv("data/03_data_normalized_counts_and_raw_counts.tsv")
+data <- read_tsv("data/03_data_means.tsv")
 
 # Wrangle data ------------------------------------------------------------
 # General linear model -----------------------
@@ -34,24 +34,9 @@ model_unnested <- model_nested %>%
 
 # Different DE expression analysis that uses all replicates ---------------
 # Calculating normalized mean expression across replicates for every experiment
-data_normalized_mean_across_replicates <- data %>% 
-  select(c(-time_as_numeric,
-           -counts,
-           -total_counts)) %>% 
-  group_by(treatment,
-           time,
-           genes) %>% 
-  mutate(mean_over_replicates = mean(normalized_counts)) %>% 
-  ungroup() %>% 
-  select(treatment, time, 
-         genes, replicate,
-         normalized_counts,
-         mean_over_replicates) %>% 
-  distinct() 
-
 set.seed(934485)
 
-data_DE <-  data_normalized_mean_across_replicates %>% 
+data_DE <-  data %>% 
   group_by(genes) %>% 
   nest() %>% 
   ungroup() %>% 
