@@ -6,7 +6,6 @@ rm(list = ls())
 library("tidyverse")
 
 # Load data ---------------------------------------------------------------
-data_sorted <- read_tsv(file = "data/03_data_aug_sorted.tsv")
 data_normalized <- read_tsv("data/03_data_normalized_mean_across_replicates.tsv")
 # Wrangle data ------------------------------------------------------------
 
