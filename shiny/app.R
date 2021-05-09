@@ -61,12 +61,22 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                     mainPanel(plotOutput("myplot"))
                                     ),
                            tabPanel("Plot top genes",
-                                    sidebarPanel(sliderInput("numGenes", "Number of genes: ",
-                                                             min = 1, max = 50,
+                                    sidebarPanel(sliderInput("numGenes",
+                                                             "Number of genes: ",
+                                                             min = 1,
+                                                             max = 50,
                                                              value = 25),
-                                                 checkboxInput("logScale", "log-scale y", TRUE)
+                                                 checkboxInput("logScale",
+                                                               "log-scale y", 
+                                                               TRUE),
+                                                 sliderInput("numGenes2",
+                                                             "Number of genes: ",
+                                                             min = 1,
+                                                             max = 50,
+                                                             value = 25)
                                     ),
-                                    mainPanel(plotOutput("plot2"))
+                                    mainPanel(plotOutput("tab2_plot1"),
+                                              plotOutput("tab2_plot2"))
                            ),
                            tabPanel("LogFC change over time", 
                                     sidebarPanel(selectizeInput(inputId = "Selected_gene2",
@@ -98,6 +108,14 @@ server <- function(input, output) {
     top_gene_order(data_sorted_long(), input$numGenes)
   )
   
+  data_sorted_long_bottom <- reactive(
+    bottom_genes_wide_to_long(data_tab2, input$numGenes2)
+  )
+  order_names_bottom <- reactive(
+    top_gene_order(data_sorted_long_bottom(), input$numGenes2)
+  )
+  
+  
   output$myplot <- renderPlot({
     ggplot(temp_tibble_for_plotting(),
            mapping = aes(x = fct_reorder(time,time_as_numeric),
@@ -128,8 +146,8 @@ server <- function(input, output) {
            y = "Log2 Fold change")
   })
   
-  #plot2 
-  output$plot2 <- renderPlot({
+  # tab2 plot1 
+  output$tab2_plot1 <- renderPlot({
       ggplot(data_sorted_long(),
              mapping = aes(factor(gene, level = order_names()),
                            count,
@@ -150,7 +168,28 @@ server <- function(input, output) {
         labs(title = "Top Genes",
              subtitle = "Ordered by differential expression at t=24h")
     })
-    
+  #tab2 plot2
+  output$tab2_plot2 <- renderPlot({
+    ggplot(data_sorted_long_bottom(),
+           mapping = aes(factor(gene, level = order_names_bottom()),
+                         count,
+                         color=time,
+                         shape=treatment,
+                         size=1.2,
+                         alpha=0.8)) +
+      geom_point() +
+      theme(axis.text.x = element_text(angle=-45,
+                                       vjust=-0.6,
+                                       hjust=0.4,
+                                       size=10)) +
+      xlab("Genes") +
+      {if(input$logScale)ylab("log(count)")
+        else ylab("count")} +
+      {if(input$logScale)scale_y_log10()} +
+      guides(size=FALSE, alpha=FALSE) +
+      labs(title = "Top Genes",
+           subtitle = "Ordered by differential expression at t=24h")
+  })
 }  #server
 
 
