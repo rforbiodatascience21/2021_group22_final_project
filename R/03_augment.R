@@ -19,7 +19,7 @@ data_normalized <- data_clean %>%
   group_by(experiment) %>% 
   mutate(total_counts = sum(counts),
          normalized_counts = (6000000/total_counts)*counts, 
-         time_as_numeric = as.numeric(str_extract(time, "\\d+"))) %>%   
+         time = as.numeric(str_extract(time, "\\d+"))) %>%   
   ungroup() 
 
 # Calculate means of the normalized data
@@ -94,6 +94,7 @@ sorted_means <- sorted_genes %>%
 sorted_means_wide <- sorted_means %>%
   pivot_wider(names_from = "genes",
               values_from = "counts")
+
 
 # Write data --------------------------------------------------------------
 write_tsv(x = data_normalized,
