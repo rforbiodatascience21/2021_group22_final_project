@@ -9,7 +9,7 @@ data_clean <- read_tsv(file = "data/02_data_clean.tsv")
 
 # Wrangle data ------------------------------------------------------------
 
-# Take mean across of each set of replicates, change time variable to numeric
+# Normalize data, change time variable to numeric
 data_normalized <- data_clean %>% 
   pivot_longer(cols = c(-treatment,
                         -time,
@@ -23,23 +23,7 @@ data_normalized <- data_clean %>%
          time_as_numeric = as.numeric(str_extract(time, "\\d+"))) %>%    #time as numeric
   ungroup() 
 
-# Calculating normalized mean expression across replicates for every experiment
-data_normalized_mean_across_replicates <- data_normalized %>% 
-  select(c(-time_as_numeric,
-           -counts,
-           -total_counts)) %>% 
-  group_by(treatment,
-           time,
-           genes) %>% 
-  mutate(mean_over_replicates = mean(normalized_counts)) %>% 
-  ungroup() %>% 
-  select(treatment,
-         time, 
-         genes,
-         replicate,
-         normalized_counts,
-         mean_over_replicates) %>% 
-  distinct() 
+
 
 # Take mean across of each set of replicates, change time variable to numeric
 data_mean <- data_clean %>%
@@ -110,9 +94,6 @@ data_sorted <- data_mean %>% relocate(all_of(sort3))
 # Write data --------------------------------------------------------------
 write_tsv(x = data_normalized,
           file = "data/03_data_normalized_counts_and_raw_counts.tsv")
-
-write_tsv(x = data_normalized_mean_across_replicates,
-          file = "data/03_data_normalized_mean_across_replicates.tsv")
 
 write_tsv(x = data_mean_log2,
           file = "data/03_data_mean_log2.tsv")
