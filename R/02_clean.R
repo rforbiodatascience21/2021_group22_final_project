@@ -27,7 +27,10 @@ my_data_counts_wide <- my_data_counts %>%
 #Samples
 my_data_samples <- my_data_samples %>%
   rename(experiment = X1) %>%
-  select(experiment, treatment, time, replicate)
+  select(experiment, 
+         treatment,
+         time,
+         replicate)
 
 
 #join dataframes
