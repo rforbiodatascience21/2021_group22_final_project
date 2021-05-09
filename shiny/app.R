@@ -4,7 +4,7 @@ library("shiny")
 library("shinythemes")
 library("patchwork")
 
-setwd("/cloud/project/shiny")
+#setwd("/cloud/project/shiny")
 source(file = "99_functions.R")
 
 # Load data ---------------------------------------------------------------
