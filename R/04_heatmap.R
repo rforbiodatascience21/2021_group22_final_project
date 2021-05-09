@@ -25,21 +25,8 @@ data_zscore <- data_normalized_long %>%
   ungroup() %>%
   select(experiment, genes, z_score)
 
-# Find the top 500 deferentially expressed genes to plot
-data_sorted_long <- data_sorted %>%
-  select(0:502) %>%
-  pivot_longer(!c(treatment, time),
-               names_to = "genes",
-               values_to = "count") %>%
-  distinct(genes)
-
-# Only keep z-score for the top n deferentially expressed genes chosen earlier
-data_plot <- semi_join(data_zscore, data_sorted_long, by="genes")
-
-head(data_plot)
-
 # Plot and save heatmap
-data_plot %>%
+data_zscore %>%
   mutate(experiment = as_factor(experiment)) %>%
   ggplot(aes(y=genes, x=experiment, fill=z_score)) + 
   geom_tile() +
