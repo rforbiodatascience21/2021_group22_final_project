@@ -19,7 +19,7 @@ data_normalized <- data_clean %>%
   group_by(experiment) %>% 
   mutate(total_counts = sum(counts),
          normalized_counts = (6000000/total_counts)*counts, 
-         time = as.numeric(str_extract(time, "\\d+"))) %>%   
+         time_as_numeric = as.numeric(str_extract(time, "\\d+"))) %>%   
   ungroup() 
 
 # Calculate means of the normalized data

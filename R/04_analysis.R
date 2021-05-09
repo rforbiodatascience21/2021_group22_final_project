@@ -173,6 +173,7 @@ K_means_plot <- K_means_data %>%
        color = "Cluster") + 
   geom_label_repel(mapping = aes(label = experiment), size = 2.5)
 
+
 # Write data ------------------------------------------------------------
 # Save heatmap
 ggsave(path = "results",
@@ -181,11 +182,12 @@ ggsave(path = "results",
 
 # Save top expression
 ggsave(path = "results",
-       filename = paste("04_diffexpGenes_top",
+       filename = str_c("04_diffexpGenes_top",
                         as.character(num_genes),
-                        ".png", sep=""), 
+                        ".png"), 
        plot = top_expression_plot)
 
+# Save PCA and K-means plots
 ggsave(path = "results",
        filename = "04_PCA_plot.png",
        plot = PCA_plot)
