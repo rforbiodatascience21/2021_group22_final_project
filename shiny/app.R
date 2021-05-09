@@ -4,7 +4,7 @@ library("shiny")
 library("shinythemes")
 library("patchwork")
 
-#setwd("/cloud/project/shiny")
+setwd("/cloud/project/shiny")
 source(file = "99_functions.R")
 
 # Load data ---------------------------------------------------------------
@@ -51,7 +51,7 @@ data_tab2 <- read_tsv("03_data_aug_sorted.tsv")
 # App creation ------------------------------------------------------------
 # Define UI
 ui <- fluidPage(theme = shinytheme("cerulean"),
-                navbarPage("My first navbar page",
+                navbarPage("SARS-CoV-19 protein expression",
                            tabPanel("Protein expression per time", 
                                     sidebarPanel(selectizeInput(inputId = "Selected_gene",
                                                              "Gene:",
@@ -68,8 +68,15 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                     ),
                                     mainPanel(plotOutput("plot2"))
                            ),
-                           tabPanel("navbar 3")
-                            )
+                           tabPanel("LogFC change over time", 
+                                    sidebarPanel(selectizeInput(inputId = "Selected_gene2",
+                                                                "Gene:",
+                                                                choices = unique_gene_names,
+                                                                selected = "SPIKE_WCPV",
+                                                                options = list(maxItems = 1))),
+                                    mainPanel(plotOutput("myplot2"))
+                           )
+                          )
                 ) # fluidPage
 
 
@@ -81,7 +88,7 @@ server <- function(input, output) {
     filter(genes == input$Selected_gene))
   
   tibble_for_time_model <- reactive(time_model_for_plotting %>% 
-    filter(Gene == input$Selected_gene))
+    filter(Gene == input$Selected_gene2))
   
   #tab2
   data_sorted_long <- reactive(
@@ -110,6 +117,12 @@ server <- function(input, output) {
       geom_point() + 
       geom_abline(mapping = aes(intercept=mean(`estimate_(Intercept)`),
                                 slope=mean(estimate_time))) +
+      geom_abline(mapping = aes(slope=mean(estimate_time),
+                                intercept=mean(`estimate_(Intercept)`)+mean(`std.error_(Intercept)`)),
+                  lty = "dashed") +
+      geom_abline(mapping = aes(slope=mean(estimate_time),
+                                intercept=mean(`estimate_(Intercept)`)-mean(`std.error_(Intercept)`)),
+                  lty = "dashed") +
       theme_minimal() +
       labs(x = "Time [Hours]",
            y = "Log2 Fold change")
