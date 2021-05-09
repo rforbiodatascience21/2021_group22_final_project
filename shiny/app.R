@@ -43,7 +43,7 @@ time_model_for_plotting <- data_time_model %>%
 
 # Loading data second panel -----------------------------------------------
 
-data_tab2 <- read_tsv("03_data_aug_sorted.tsv")
+data_tab2 <- read_tsv("03_genes_sorted_by_highest_logFC_per_time.tsv")
 
 
 
@@ -62,18 +62,18 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                     ),
                            tabPanel("Plot top genes",
                                     sidebarPanel(sliderInput("numGenes",
-                                                             "Number of genes: ",
+                                                             "Number of genes (top): ",
+                                                             min = 1,
+                                                             max = 50,
+                                                             value = 25),
+                                                 sliderInput("numGenes2",
+                                                             "Number of genes (bottom): ",
                                                              min = 1,
                                                              max = 50,
                                                              value = 25),
                                                  checkboxInput("logScale",
                                                                "log-scale y", 
-                                                               TRUE),
-                                                 sliderInput("numGenes2",
-                                                             "Number of genes: ",
-                                                             min = 1,
-                                                             max = 50,
-                                                             value = 25)
+                                                               TRUE)
                                     ),
                                     mainPanel(plotOutput("tab2_plot1"),
                                               plotOutput("tab2_plot2"))
@@ -100,14 +100,15 @@ server <- function(input, output) {
   tibble_for_time_model <- reactive(time_model_for_plotting %>% 
     filter(Gene == input$Selected_gene2))
   
-  #tab2
+  #tab2 -----
+  # data for top plot
   data_sorted_long <- reactive(
     top_genes_wide_to_long(data_tab2, input$numGenes)
   )
   order_names <- reactive(
     top_gene_order(data_sorted_long(), input$numGenes)
   )
-  
+  # data for bottom plot
   data_sorted_long_bottom <- reactive(
     bottom_genes_wide_to_long(data_tab2, input$numGenes2)
   )
@@ -146,12 +147,14 @@ server <- function(input, output) {
            y = "Log2 Fold change")
   })
   
-  # tab2 plot1 
+  # tab2 plot1 overexpressed genes
+  pal <- c("#FFCC00", "#FF3300", "#CC3399", "#660066")
+  
   output$tab2_plot1 <- renderPlot({
       ggplot(data_sorted_long(),
              mapping = aes(factor(gene, level = order_names()),
                            count,
-                           color=time,
+                           color=factor(time),
                            shape=treatment,
                            size=1.2,
                            alpha=0.8)) +
@@ -166,14 +169,16 @@ server <- function(input, output) {
         {if(input$logScale)scale_y_log10()} +
         guides(size=FALSE, alpha=FALSE) +
         labs(title = "Top Genes",
-             subtitle = "Ordered by differential expression at t=24h")
+             subtitle = "Genes over-expressed or upregulated in infected cells at t=24h") + 
+        scale_colour_manual(values = pal)
     })
-  #tab2 plot2
+  
+  #tab2 plot2 underexpressed genes
   output$tab2_plot2 <- renderPlot({
     ggplot(data_sorted_long_bottom(),
            mapping = aes(factor(gene, level = order_names_bottom()),
                          count,
-                         color=time,
+                         color=factor(time),
                          shape=treatment,
                          size=1.2,
                          alpha=0.8)) +
@@ -187,8 +192,9 @@ server <- function(input, output) {
         else ylab("count")} +
       {if(input$logScale)scale_y_log10()} +
       guides(size=FALSE, alpha=FALSE) +
-      labs(title = "Top Genes",
-           subtitle = "Ordered by differential expression at t=24h")
+      labs(title = "Bottom Genes",
+           subtitle = "Genes under-expressed or downregulated in infected cells at t=24h") + 
+      scale_colour_manual(values = pal)
   })
 }  #server
 
