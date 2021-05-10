@@ -301,6 +301,15 @@ ggsave(path = "results",
        height = 10,
        plot = top_bottom)
 
+ggsave(path = "results",
+       filename = "04_top_8_over_time.png",
+       plot = top_exp_plot)
+
+ggsave(path = "results",
+       filename = "04_bottom_8_over_time.png",
+       plot = bottom_exp_plot)
+
+
 # Save sorted means
 write_tsv(x = sorted_means_wide,
           file = "results/04_genes_sorted_by_highest_logFC_per_time.tsv")
