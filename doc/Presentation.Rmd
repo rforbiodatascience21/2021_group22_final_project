@@ -26,31 +26,67 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 ## Project Aim
+
+
+
 *Aim: To carry out tidy data analysis of proteomics data, and communicate the findings to non-bioinformaticians in a way that enables them to get information about their genes of choice.*
 
 
 # Materials
 
 ## Project data
-- Data obtained from Bojkova *et al.*.
+
+- Data obtained from Bojkova *et al.*
 - Infection profile of SARS-CoV-2 using a human cell-culture model.
-  - Infection or mock-infection of Caco-2 (colon epithilial carcinoma cells)
----
-- Protein expression at four different time points after infection.
+  - Infection (**Corona**) or **mock**-infection of **Caco-2** (colon epithilial carcinoma cells)
+
+
+## Project Data
+
+- Protein expression at **four different time** points.
+- For each time point we have **triplicates**
+- Cells lysed and lysate fed into **LC-MS/MS** to generate **protein counts**. 
+
+
+## Project Data
 - Investigate genes and pathways that are altered during infection.
-- Tandem MS generated protein counts
-- Dataset consisting of two files to be joined: Gene counts and sample information.  
+- Dataset consisting of two files to be joined and cleaned:
+  - **Gene counts** and **sample meta-information**.  
 
 
 # Methods
 
+## Methods
+
+- Everything done in **Tidyverse** R. 
+- Done through **Github** to emphasize project collaboration
+
 ## Project overview
-```{r}
+
+```{r, echo = FALSE, out.width = "800px"}
 include_graphics("/cloud/project/results/flowchart.png")
 ```
 
+## Handling zeros
+
+- Replace with a **small value**. 
+- An inherent problem for -omics and when handling compositional data in general.
+
 
 ## Data augmentation
+
+- After cleaning data was **normalized**
+- Normalization is due to different samplesizes
+- **FPKM** equivalent **not feasible**
+  - **Big genes** are not necessarily translated more 
+- On data frame iskept that has **ALL** the replicate information
+
+## Data augmentation
+
+- We calculated **means** for **conditions** over **replicates**. 
+- 
+
+
 - Normalize mean within each group of replicates.
 - Mean of replicates
 - Log2 fold change between control and infected samples
@@ -83,13 +119,13 @@ include_graphics("/cloud/project/results/flowchart.png")
 
 # Results
 ## PCA
-```{r, echo = FALSE, out.width = "1000px",}
+```{r, echo = FALSE, out.width = "1000px"}
 #knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
 ```
 ---
 
 ## Heatmap
-```{r, echo = FALSE, out.width = "1000px",}
+```{r, echo = FALSE, out.width = "1000px"}
 knitr::include_graphics("/cloud/project/results/04_Heatmap.png")
 ```
 
