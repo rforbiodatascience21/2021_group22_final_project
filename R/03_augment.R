@@ -101,7 +101,7 @@ sorted_means_wide <- sorted_means %>%
 
 # Write data --------------------------------------------------------------
 write_tsv(x = data_normalized,
-          file = "data/03_data_normalized_counts_and_raw_counts.tsv")
+          file = "data/03_data_normalized_counts.tsv")
 
 write_tsv(x = data_normalized_mean_across_replicates,
           file = "data/03_data_normalized_count_mean_over_replicates.tsv")

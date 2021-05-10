@@ -12,7 +12,7 @@ source(file = "R/99_functions.R")
 # Load data ---------------------------------------------------------------
 data_heatmap <- read_tsv("data/03_data_normalized_count_mean_over_replicates.tsv")
 data_top_expr <- read_tsv(file = "data/03_genes_sorted_by_highest_logFC_per_time.tsv")
-data_PCA_kmeans <- read_tsv("data/03_data_normalized_counts_and_raw_counts.tsv") 
+data_PCA_kmeans <- read_tsv("data/03_data_normalized_counts.tsv") 
 
 # Heat map ----------------------------------------------------------
 data_normalized_long <- data_heatmap %>%
