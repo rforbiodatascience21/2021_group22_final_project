@@ -30,3 +30,5 @@ source(file = "R/02_clean.R")
 source(file = "R/03_augment.R")
 source(file = "R/04_analysis.R")
 source(file = "R/05_modelling.R")
+
+rmarkdown::render("/cloud/project/doc/Presentation.Rmd")
