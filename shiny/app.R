@@ -9,7 +9,7 @@ source(file = "99_functions.R")
 
 # Load data ---------------------------------------------------------------
 data_tab1 <- read_tsv("05_individual_times_ttest_and_data.tsv")
-data_tab2 <- read_tsv("03_genes_sorted_by_highest_logFC_per_time.tsv")
+data_tab2 <- read_tsv("04_genes_sorted_by_highest_logFC_per_time.tsv")
 data_tab3 <- read_tsv("05_linear_model_time_results.tsv")
 
 # Wrangle data ------------------------------------------------------------
