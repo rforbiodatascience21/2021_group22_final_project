@@ -8,8 +8,6 @@ library("patchwork")
 library("ggrepel")
 library("viridis")          
 
-
-
 # Load data ---------------------------------------------------------------
 data_mean_over_replicates <- read_tsv(file = "data/03_data_normalized_count_mean_over_replicates.tsv")
 data_log2 <- read_tsv(file = "data/03_data_logFC_for_time.tsv")
@@ -102,7 +100,7 @@ order_names <- data_sorted_long %>%
 # Plot
 top_20_genes <- ggplot(data = data_sorted_long,
        mapping = aes(factor(genes, 
-                            level = factor(order_names)),
+                            level = as_factor(order_names)),
                      mean_over_replicates,
                      color = time,
                      shape = treatment)) +
@@ -117,16 +115,16 @@ top_20_genes <- ggplot(data = data_sorted_long,
 # Now get just the top 8, as well as the bottom 8 (underexpressed)
 data_sorted_long_top8 <- sorted_means_wide %>%
   select(1:10) %>%
-  pivot_longer(-c(treatment, 
-                  time),
+  pivot_longer(cols = c(-treatment, 
+                  -time),
                names_to = "genes",
                values_to = "mean_over_replicates")
 
 
 data_sorted_long_bottom8 <- sorted_means_wide %>%
-  select(-c(3:last_col(8))) %>%
-  pivot_longer(-c(treatment, 
-                  time),
+  select(cols = -c(3:last_col(8))) %>%
+  pivot_longer(cols = c(-treatment, 
+                  -time),
                names_to = "genes",
                values_to = "mean_over_replicates")
 
@@ -167,7 +165,7 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
   scale_y_log10() +
   theme_minimal() +
   ylab("count") +
-  scale_x_discrete(limits=c(2, 6, 10, 24)) +
+  scale_x_discrete(limits = c(2, 6, 10, 24)) +
   scale_alpha(guide = 'none') +
   scale_size(guide = 'none') +
   ggtitle("Bottom 8 underexpressed genes in (virus, 24h)") +
@@ -186,6 +184,8 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
 
 # Combine top and bottom
 top_bottom <- top_exp_plot / bottom_exp_plot
+
+top_exp_plot / bottom_exp_plot
 
 # PCA and Kmeans ----------------------------------------------------------
 
