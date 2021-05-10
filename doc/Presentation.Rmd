@@ -116,12 +116,12 @@ include_graphics("/cloud/project/results/flowchart.png")
 # Results
 
 ## Heatmap
-```{r, echo = FALSE, out.width = "500px"}
+```{r, echo = FALSE, out.width = "800px"}
 knitr::include_graphics("/cloud/project/results/04_Heatmap.png")
 ```
 
 ## PCA
-```{r, echo = FALSE, out.width = "1000px"}
+```{r, echo = FALSE, out.width = "800px"}
 knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
 ```
 
