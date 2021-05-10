@@ -34,7 +34,7 @@ data_zscore <- data_normalized_long %>%
          sd_of_counts_for_gene = sd(mean_over_replicates),
          count_minus_mean = mean_over_replicates-mean_counts_for_gene,
          z_score = count_minus_mean/sd_of_counts_for_gene) %>%
-  ungroup() %>%
+  ungroup %>%
   select(experiment,
          genes, 
          z_score)
