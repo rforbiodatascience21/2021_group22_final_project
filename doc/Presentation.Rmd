@@ -105,11 +105,14 @@ knitr::include_graphics("/cloud/project/results/04_Heatmap.png")
 ## Shiny app
 ```{r, echo=FALSE}
 include_app("https://signe-hjort.shinyapps.io/shiny/", height = "500px")
+<<<<<<< HEAD
 ```
 
 
 
 
+=======
+>>>>>>> ddfa77e41ba1f1b81caf85b91356a1bb6fe534d7
 
 
 ## Project overview and structure
