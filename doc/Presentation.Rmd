@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = FALSE)
 - High infectivity has resulted in a still ongoing pandemic.
 - There is no current treatment.
 
-- To investigate the infection profile of SARS-CoV-2 Bojkova et al used a human cell-culture model. They infected the cells with an isolate of SARS-CoV-2 and looked at protein expression at four different time points after infection.
+- To investigate the infection profile of SARS-CoV-2 Bojkova *et al.* used a human cell-culture model. They infected the cells with an isolate of SARS-CoV-2 and looked at protein expression at four different time points after infection.
 
 
 ## Project data and aim

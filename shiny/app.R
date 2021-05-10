@@ -8,18 +8,12 @@ library("patchwork")
 source(file = "99_functions.R")
 
 # Load data ---------------------------------------------------------------
-data_for_plot_raw <- read_tsv("03_data_mean_log2.tsv")
 data_tab1 <- read_tsv("05_individual_times_ttest_and_data.tsv")
 data_tab2 <- read_tsv("03_genes_sorted_by_highest_logFC_per_time.tsv")
 data_tab3 <- read_tsv("05_linear_model_time_results.tsv")
 
 # Wrangle data ------------------------------------------------------------
 ## Tab 1
-data_for_plot <- data_for_plot_raw %>%
-  pivot_longer(cols = c(-treatment, -time),
-               names_to = "genes",
-               values_to = "log_fold_change") 
-
 data_times_seperated <- data_tab1 %>% 
   mutate(time_as_numeric = as.numeric(str_extract(time, "\\d+"))) 
 
@@ -127,8 +121,7 @@ server <- function(input, output) {
                                        hjust=0.4,
                                        size=10)) +
       xlab("Genes") +
-      {if(input$logScale)ylab("log(count)")
-        else ylab("count")} +
+      ylab(if_else(input$logScale, "log(count)", "count")) +
       {if(input$logScale)scale_y_log10()} +
       guides(size=FALSE, alpha=FALSE) +
       labs(title = "Top Genes",
@@ -151,8 +144,7 @@ server <- function(input, output) {
                                        hjust=0.4,
                                        size=10)) +
       xlab("Genes") +
-      {if(input$logScale)ylab("log(count)")
-        else ylab("count")} +
+      ylab(if_else(input$logScale, "log(count)", "count")) +
       {if(input$logScale)scale_y_log10()} +
       guides(size=FALSE, alpha=FALSE) +
       labs(title = "Bottom Genes",
