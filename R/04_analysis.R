@@ -98,7 +98,7 @@ order_names <- data_sorted_long %>%
   factor()
 
 # Plot
-ggplot(data = data_sorted_long,
+top_20_genes <- ggplot(data = data_sorted_long,
        mapping = aes(factor(genes, level = factor(order_names)),
                      mean_over_replicates,
                      color = time,
@@ -110,12 +110,6 @@ ggplot(data = data_sorted_long,
   xlab("Top genes (by differential expression)") +
   ylab("log(count)") +
   scale_y_log10()
-
-ggsave(path = "results",
-       filename = str_c("04_diffexpGenes_top",
-                        as.character(n_genes),
-                        ".png",
-                        sep=""))
 
 # Now get just the top 8, as well as the bottom 8 (underexpressed)
 data_sorted_long_top8 <- sorted_means_wide %>%
@@ -302,12 +296,13 @@ ggsave(path = "results",
        filename = str_c("04_diffexpGenes_top",
                         as.character(num_genes),
                         ".png"), 
-       plot = top_expression_plot)
+       plot = top_exp_plot)
 
 ggsave(path = "results",
        filename = "04_top_and_bottom_8_over_time.png",
        width = 11,
-       height = 10)
+       height = 10,
+       plot = top_bottom)
 
 # Save sorted means
 write_tsv(x = sorted_means_wide,
