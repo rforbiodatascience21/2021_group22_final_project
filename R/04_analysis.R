@@ -150,7 +150,7 @@ top_exp_plot <- ggplot(data = data_sorted_long_top8,
                   size = 2.6,
                   xlim = c(24, 30)) +
   guides(color = FALSE) +
-  theme(legend.position = c(0.1,0.9),
+  theme(legend.position = c(0.15,0.85),
         legend.background = element_rect(),
         plot.margin = unit(c(10, 100, 10, 10), 
                            "points")) +
@@ -177,7 +177,7 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
                   size = 2.6,
                   xlim = c(24, 30)) +
   guides(color = FALSE) +
-  theme(legend.position = c(0.1, 0.1),
+  theme(legend.position = c(0.15, 0.15),
         legend.background = element_rect(),
         plot.margin=unit(c(10, 100, 10, 10), 
                          "points")) +
@@ -283,7 +283,7 @@ K_means_plot <- K_means_data %>%
   labs(x = "PC1",
        y = "PC2", 
        color = "Cluster") + 
-  geom_label_repel(mapping = aes(label = experiment), size = 2.5)
+  geom_label_repel(mapping = aes(label = experiment), size = 2)
 
 
 # Write data ------------------------------------------------------------
