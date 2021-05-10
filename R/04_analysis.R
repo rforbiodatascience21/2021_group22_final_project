@@ -155,6 +155,7 @@ top_exp_plot <- ggplot(data = data_sorted_long_top8,
   guides(color = FALSE) +
   theme(legend.position = c(0.15,0.85),
         legend.background = element_rect(),
+        legend.text = element_text(size = 8),
         plot.margin = unit(c(10, 100, 10, 10), 
                            "points")) +
   coord_cartesian(clip = "off")
@@ -182,6 +183,7 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
   guides(color = FALSE) +
   theme(legend.position = c(0.15, 0.15),
         legend.background = element_rect(),
+        legend.text = element_text(size = 8),
         plot.margin=unit(c(10, 100, 10, 10), 
                          "points")) +
   coord_cartesian(clip = "off")
