@@ -4,7 +4,7 @@ library("shiny")
 library("shinythemes")
 library("patchwork")
 
-#setwd("/cloud/project/shiny")
+setwd("/cloud/project/shiny")
 source(file = "99_functions.R")
 
 # Load data ---------------------------------------------------------------
@@ -50,12 +50,12 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                     ),
                            tabPanel("Plot top genes",
                                     sidebarPanel(sliderInput("numGenes",
-                                                             "Number of genes (top): ",
+                                                             "Number of upregulated genes: ",
                                                              min = 1,
                                                              max = 50,
                                                              value = 25),
                                                  sliderInput("numGenes2",
-                                                             "Number of genes (bottom): ",
+                                                             "Number of downregulated genes: ",
                                                              min = 1,
                                                              max = 50,
                                                              value = 25),
@@ -121,7 +121,6 @@ server <- function(input, output) {
                                        hjust=0.4,
                                        size=10)) +
       xlab("Genes") +
-      ylab(if_else(input$logScale, "log(count)", "count")) +
       {if(input$logScale)scale_y_log10()} +
       guides(size=FALSE, alpha=FALSE) +
       labs(title = "Top Genes",
@@ -144,7 +143,6 @@ server <- function(input, output) {
                                        hjust=0.4,
                                        size=10)) +
       xlab("Genes") +
-      ylab(if_else(input$logScale, "log(count)", "count")) +
       {if(input$logScale)scale_y_log10()} +
       guides(size=FALSE, alpha=FALSE) +
       labs(title = "Bottom Genes",
