@@ -1,7 +1,12 @@
 ---
 title: "SARS-CoV-2 protein expression"
 subtitle: "Final project in R for Bio Data Science (22100)"
-author: "Alban Laus Obel Slabowska (s200347), Astrid Rasmussen (s193254), Jens Waaben (s205972), Signe Katrine Hjort (s174587), Signe Fischer Ravn (s175410)"
+author: 
+- "Alban Laus Obel Slabowska (s200347)"  
+- "Astrid Rasmussen (s193254)"  
+- "Jens Waaben (s205972)"  
+- "Signe Katrine Hjort (s174587)"  
+- "Signe Fischer Ravn (s175410)"  
 date: 12-05-2021
 output:
   ioslides_presentation:
@@ -66,7 +71,10 @@ plots and tables
 
 ## Shiny app
 ```{r, echo=FALSE}
-include_app("URL", height = "500px")
+include_app(" https://signe-hjort.shinyapps.io/shiny/", height = "500px")
+
+
+
 ```
 
 
