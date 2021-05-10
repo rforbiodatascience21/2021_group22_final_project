@@ -34,7 +34,9 @@ knitr::opts_chunk$set(echo = FALSE)
   
 
 ## Project overview and structure
-![Placeholder](/cloud/project/results/04_PCA_plot.png)
+```{r, echo = FALSE, out.width = "650px",}
+knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
+```
 **insert picture of structure**
 
 # Materials and methods
@@ -59,12 +61,17 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 # Results
+## PCA
+```{r, echo = FALSE, out.width = "650px",}
+knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
+```
+---
 
----
-plots and tables
-![](/cloud/project/results/04_PCA_plot.png)
----
-![](/cloud/project/results/Heatmap.png)
+## Heatmap
+```{r, echo = FALSE, out.width = "650px",}
+knitr::include_graphics("/cloud/project/results/04_Heatmap.png")
+```
+
 
 
 ## Shiny app
