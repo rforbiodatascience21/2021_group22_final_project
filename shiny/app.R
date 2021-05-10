@@ -9,29 +9,30 @@ source(file = "99_functions.R")
 
 # Load data ---------------------------------------------------------------
 data_for_plot_raw <- read_tsv("03_data_mean_log2.tsv")
+data_tab1 <- read_tsv("05_individual_times_ttest_and_data.tsv")
 data_tab2 <- read_tsv("03_genes_sorted_by_highest_logFC_per_time.tsv")
+data_tab3 <- read_tsv("05_linear_model_time_results.tsv")
 
 # Wrangle data ------------------------------------------------------------
-#prepare data for plot
+# Tab 1
 data_for_plot <- data_for_plot_raw %>%
   pivot_longer(cols = c(-treatment, -time),
                names_to = "genes",
                values_to = "log_fold_change") 
 
-
-data_times_seperated <- read_tsv("05_individual_times_ttest_and_data.tsv") %>% 
+data_times_seperated <- data_tab1 %>% 
   mutate(time_as_numeric = as.numeric(str_extract(time, "\\d+"))) 
 
 data_time_model <- read_tsv("05_linear_model_time_results.tsv")
 
-# making list of genes to choose between: 
+# Making list of genes to choose between: 
 unique_gene_names <- data_times_seperated %>% 
   select(genes) %>% 
   distinct() %>% 
   arrange(genes)
 
-#chosing only variables needed forplotting 
-time_model_for_plotting <- data_time_model %>% 
+# Chosing only variables needed forplotting 
+time_model_for_plotting <- data_tab3 %>% 
   rename(time_stamp = time) %>% 
   pivot_wider(names_from = term,
               values_from = c(estimate, 
@@ -108,7 +109,57 @@ server <- function(input, output) {
     top_gene_order(data_sorted_long_bottom(), input$numGenes2)
   )
   
+  # tab2 plot1 overexpressed genes
+  pal <- c("#FFCC00", "#FF3300", "#CC3399", "#660066")
   
+  output$tab2_plot1 <- renderPlot({
+    ggplot(data_sorted_long(),
+           mapping = aes(factor(gene, level = order_names()),
+                         count,
+                         color=factor(time),
+                         shape=treatment,
+                         size=1.2,
+                         alpha=0.8)) +
+      geom_point() +
+      theme(axis.text.x = element_text(angle=-45,
+                                       vjust=-0.6,
+                                       hjust=0.4,
+                                       size=10)) +
+      xlab("Genes") +
+      {if(input$logScale)ylab("log(count)")
+        else ylab("count")} +
+      {if(input$logScale)scale_y_log10()} +
+      guides(size=FALSE, alpha=FALSE) +
+      labs(title = "Top Genes",
+           subtitle = "Genes over-expressed or upregulated in infected cells at t=24h") + 
+      scale_colour_manual(values = pal)
+  })
+  
+  #tab2 plot2 underexpressed genes
+  output$tab2_plot2 <- renderPlot({
+    ggplot(data_sorted_long_bottom(),
+           mapping = aes(factor(gene, level = order_names_bottom()),
+                         count,
+                         color=factor(time),
+                         shape=treatment,
+                         size=1.2,
+                         alpha=0.8)) +
+      geom_point() +
+      theme(axis.text.x = element_text(angle=-45,
+                                       vjust=-0.6,
+                                       hjust=0.4,
+                                       size=10)) +
+      xlab("Genes") +
+      {if(input$logScale)ylab("log(count)")
+        else ylab("count")} +
+      {if(input$logScale)scale_y_log10()} +
+      guides(size=FALSE, alpha=FALSE) +
+      labs(title = "Bottom Genes",
+           subtitle = "Genes under-expressed or downregulated in infected cells at t=24h") + 
+      scale_colour_manual(values = pal)
+  })
+  
+  # Tab 3 -----
   output$myplot <- renderPlot({
     ggplot(temp_tibble_for_plotting(),
            mapping = aes(x = fct_reorder(time,time_as_numeric),
@@ -138,57 +189,8 @@ server <- function(input, output) {
       labs(x = "Time [Hours]",
            y = "Log2 Fold change")
   })
-  
-  # tab2 plot1 overexpressed genes
-  pal <- c("#FFCC00", "#FF3300", "#CC3399", "#660066")
-  
-  output$tab2_plot1 <- renderPlot({
-      ggplot(data_sorted_long(),
-             mapping = aes(factor(gene, level = order_names()),
-                           count,
-                           color=factor(time),
-                           shape=treatment,
-                           size=1.2,
-                           alpha=0.8)) +
-        geom_point() +
-        theme(axis.text.x = element_text(angle=-45,
-                                         vjust=-0.6,
-                                         hjust=0.4,
-                                         size=10)) +
-        xlab("Genes") +
-        {if(input$logScale)ylab("log(count)")
-        else ylab("count")} +
-        {if(input$logScale)scale_y_log10()} +
-        guides(size=FALSE, alpha=FALSE) +
-        labs(title = "Top Genes",
-             subtitle = "Genes over-expressed or upregulated in infected cells at t=24h") + 
-        scale_colour_manual(values = pal)
-    })
-  
-  #tab2 plot2 underexpressed genes
-  output$tab2_plot2 <- renderPlot({
-    ggplot(data_sorted_long_bottom(),
-           mapping = aes(factor(gene, level = order_names_bottom()),
-                         count,
-                         color=factor(time),
-                         shape=treatment,
-                         size=1.2,
-                         alpha=0.8)) +
-      geom_point() +
-      theme(axis.text.x = element_text(angle=-45,
-                                       vjust=-0.6,
-                                       hjust=0.4,
-                                       size=10)) +
-      xlab("Genes") +
-      {if(input$logScale)ylab("log(count)")
-        else ylab("count")} +
-      {if(input$logScale)scale_y_log10()} +
-      guides(size=FALSE, alpha=FALSE) +
-      labs(title = "Bottom Genes",
-           subtitle = "Genes under-expressed or downregulated in infected cells at t=24h") + 
-      scale_colour_manual(values = pal)
-  })
-}  #server
+
+}  #server end
 
 
 # Create Shiny object
