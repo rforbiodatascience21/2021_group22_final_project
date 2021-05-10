@@ -46,8 +46,8 @@ heatmap_plot <- data_zscore %>%
   geom_tile() +
   scale_fill_gradient2(low = "yellow",
                        high = "red") + 
-  theme(axis.ticks.y = element_blank,
-        axis.text.y = element_blank) +
+  theme(axis.ticks.y = element_blank(),
+        axis.text.y = element_blank()) +
   ggtitle("Protein levels across all samples -standardized using z-scoring")
 
 # Top expression ----------------------------------------------------------
