@@ -130,12 +130,17 @@ knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
 knitr::include_graphics("/cloud/project/results/04_Kmeans_plot.png")
 ```
 
-## Top DE-genes
+## Top upregulated DE-genes
 
-```{r, echo = FALSE, out.height = "600px"}
-knitr::include_graphics("/cloud/project/results/04_top_and_bottom_8_over_time.png")
+```{r, echo = FALSE, out.height = "500px"}
+knitr::include_graphics("/cloud/project/results/04_top_8_over_time.png")
 ```
 
+## Top downregulated DE-genes
+
+```{r, echo = FALSE, out.height = "500px"}
+knitr::include_graphics("/cloud/project/results/04_bottom_8_over_time.png")
+```
 
 ## Shiny app
 ```{r, echo=FALSE}
@@ -150,7 +155,11 @@ include_graphics("/cloud/project/results/flowchart.png")
 
 
 # Discussion
-* genes for further
-* Benefit if had done gene ontology  ??
+
+
+## Results
+
+- A lot of the upregulated genes are in the corona genome
+- Good sanity check 
 
 
