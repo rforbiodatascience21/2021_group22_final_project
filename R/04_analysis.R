@@ -16,8 +16,13 @@ data_PCA_kmeans <- read_tsv("data/03_data_normalized_counts_and_raw_counts.tsv")
 
 # Heat map ----------------------------------------------------------
 data_normalized_long <- data_heatmap %>%
-  unite("experiment", treatment, time, sep = "_", remove = TRUE) %>%
-  select(experiment, genes, mean_over_replicates) %>%
+  unite("experiment", 
+        treatment,
+        time,
+        sep = "_",
+        remove = TRUE) %>%
+  select(experiment, genes,
+         mean_over_replicates) %>%
   distinct()
 
 # Calculate z-score
@@ -28,14 +33,18 @@ data_zscore <- data_normalized_long %>%
          count_minus_mean = mean_over_replicates-mean_counts_for_gene,
          z_score = count_minus_mean/sd_of_counts_for_gene) %>%
   ungroup() %>%
-  select(experiment, genes, z_score)
+  select(experiment,
+         genes, z_score)
 
 # Plot and save heatmap
 heatmap_plot <- data_zscore %>%
   mutate(experiment = as_factor(experiment)) %>%
-  ggplot(aes(y=genes, x=experiment, fill=z_score)) + 
+  ggplot(aes(y=genes,
+             x=experiment,
+             fill=z_score)) + 
   geom_tile() +
-  scale_fill_gradient2(low = "yellow", high = "red") + 
+  scale_fill_gradient2(low = "yellow",
+                       high = "red") + 
   theme(axis.ticks.y = element_blank(),
         axis.text.y = element_blank())
 
@@ -45,7 +54,8 @@ heatmap_plot <- data_zscore %>%
 n_genes = 20
 data_sorted_long_top20 <- top_genes_wide_to_long(data_top_expr, num_genes = n_genes)
 # Get the order of highest log fold expression
-order_names <- top_gene_order(data_sorted_long20, num_genes = n_genes)
+order_names <- top_gene_order(data_sorted_long20,
+                              num_genes = n_genes)
 
 ggplot(data = data_sorted_long20,
        mapping = aes(factor(gene, level = order_names),
@@ -61,14 +71,17 @@ ggplot(data = data_sorted_long20,
   scale_y_log10()
 
 ggsave(path = "results",
-       filename = paste("04_diffexpGenes_top",
+       filename = str_c("04_diffexpGenes_top",
                         as.character(n_genes),
-                        ".png", sep=""))
+                        ".png",
+                        sep=""))
 
 # Now get just the top 8, as well as the bottom 8 (underexpressed)
-data_sorted_long_top8 <- top_genes_wide_to_long(data_top_expr, num_genes = 8)
+data_sorted_long_top8 <- top_genes_wide_to_long(data_top_expr,
+                                                num_genes = 8)
 
-data_sorted_long_bottom8 <- bottom_genes_wide_to_long(data_top_expr, num_genes = 8)
+data_sorted_long_bottom8 <- bottom_genes_wide_to_long(data_top_expr,
+                                                      num_genes = 8)
 
 # Plot the expression of these selected genes over time
 top_exp_plot <- ggplot(data = data_sorted_long_top8,
@@ -101,7 +114,8 @@ top_exp_plot <- ggplot(data = data_sorted_long_top8,
 
 
 bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
-                     aes(time, count,
+                     mapping = aes(x = time,
+                         y = count,
                          shape = treatment)) +
   geom_point(size = 3,
              alpha = 0.5) +
@@ -161,7 +175,10 @@ ggplot(data = data_time_as_factor_correct_order,
 
 # Importing normalized count data for PCA
 PCA_data <- data_time_as_factor_correct_order %>% 
-  select(experiment,genes,counts,time) %>% 
+  select(experiment,
+         genes,
+         counts,
+         time) %>% 
   pivot_wider(values_from = counts,
               names_from = genes)
 
