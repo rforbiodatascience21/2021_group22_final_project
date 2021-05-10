@@ -154,7 +154,7 @@ top_exp_plot <- ggplot(data = data_sorted_long_top8,
   
   coord_cartesian(clip="off")
 
-
+# Plot bottom
 bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
                      mapping = aes(x = time,
                          y = mean_over_replicates,
@@ -184,7 +184,7 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
   
   coord_cartesian(clip="off")
 
-
+# Combine top and bottom
 top_bottom <- top_exp_plot / bottom_exp_plot
 
 # PCA and Kmeans ----------------------------------------------------------
@@ -293,9 +293,7 @@ ggsave(path = "results",
 
 # Save top expression
 ggsave(path = "results",
-       filename = str_c("04_diffexpGenes_top",
-                        as.character(num_genes),
-                        ".png"), 
+       filename = str_c("04_diffexpGenes_top20.png"), 
        plot = top_exp_plot)
 
 ggsave(path = "results",
