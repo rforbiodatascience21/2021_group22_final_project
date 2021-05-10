@@ -85,11 +85,21 @@ sorted_means_wide <- sorted_means %>%
               values_from = "mean_over_replicates")
 
 
-# Select the top 20 differentially expressed genes for plotting
+# Select the top 20 differentially expressed genes for plottin
+n = 20
+# Get the order of highest log fold expression
+order_names <- top_gene_order(data_sorted_long20,
+                              num_genes = n_genes)
+
+data_sorted_long_top20 <- sorted_means %>%
+  select(1:all_of(n_genes+2)) 
+
+# How to get the top genes from the list above
 data_top20 <- sorted_means %>%
   filter(treatment == "Control") %>%
   slice_head(n = 20)
-  
+
+# Plot
 ggplot(data = data_top20,
        mapping = aes(factor(genes, level = order_names),
                      count,
@@ -116,9 +126,19 @@ data_sorted_long_top8 <- top_genes_wide_to_long(data_top_expr,
 data_sorted_long_bottom8 <- bottom_genes_wide_to_long(data_top_expr,
                                                       num_genes = 8)
 
+#How to get the top and bottom 8 from the list above
+data_top8 <- sorted_means %>%
+  filter(treatment == "Control") %>%
+  slice_head(n = 8)
+
+data_bottom8 <- sorted_means %>%
+  filter(treatment == "Control",
+         time == "24") %>%
+  slice_tail(n = 8)
+
 # Plot the expression of these selected genes over time
-top_exp_plot <- ggplot(data = data_sorted_long_top8,
-                  aes(time, count,
+top_exp_plot <- ggplot(data = data_bottom8,
+                  aes(x = time, y = count,
                       shape = treatment)) +
   geom_point(size = 3,
              alpha = 0.5) +
