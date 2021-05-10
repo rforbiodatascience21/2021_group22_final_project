@@ -6,6 +6,8 @@ library("tidyverse")
 library("broom")
 library("patchwork")
 library("ggrepel")
+library("viridis")          
+
 
 source(file = "R/99_functions.R")
 
@@ -156,7 +158,13 @@ ggsave(path = "results",
 # PCA and Kmeans ----------------------------------------------------------
 
 data_time_as_factor_correct_order <- data_PCA_kmeans %>% 
-  arrange(time_as_numeric) %>% 
+  pivot_longer(cols = c(-time,
+                        -treatment,
+                        -replicate,
+                        -experiment),
+               names_to = "genes",
+              values_to = "normalized_counts") %>% 
+  arrange(time) %>% 
   mutate(time = as_factor(time))
 
 # plotting boxplots to see if normalization worked
@@ -177,9 +185,9 @@ ggplot(data = data_time_as_factor_correct_order,
 PCA_data <- data_time_as_factor_correct_order %>% 
   select(experiment,
          genes,
-         counts,
+         normalized_counts,
          time) %>% 
-  pivot_wider(values_from = counts,
+  pivot_wider(values_from = normalized_counts,
               names_from = genes)
 
 # Performing PCA analysis
@@ -202,11 +210,13 @@ augment_PCA <- PCA_analysis %>%
 scree_plot <- variance_PCA %>% 
   ggplot(mapping = aes(x = PC,
                        y = percent)) +
-  geom_col(fill = "lightblue") + 
+  geom_col(fill = viridis(1)) + 
   geom_line() + 
   labs(y = "Percent variance", 
        x = "PC number") +
-  theme_minimal()
+  theme_minimal() + 
+  scale_fill_viridis_d()
+  
 
 # making PCA biplot
 biplot_PCA <- augment_PCA %>% 

@@ -21,6 +21,8 @@ if (!requireNamespace("broom", quietly = TRUE))
 if (!requireNamespace("ggrepel", quietly = TRUE))
   install.packages("ggrepel")
 
+if (!requireNamespace("viridis", quietly = TRUE))
+  install.packages("viridis")
 
 # Run all scripts ---------------------------------------------------------
 source(file = "R/01_load.R")
