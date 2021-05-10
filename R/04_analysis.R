@@ -12,12 +12,13 @@ library("viridis")
 source(file = "R/99_functions.R")
 
 # Load data ---------------------------------------------------------------
-data_heatmap <- read_tsv("data/03_data_normalized_count_mean_over_replicates.tsv")
+data_mean_over_replicates <- read_tsv("data/03_data_normalized_count_mean_over_replicates.tsv")
 data_top_expr <- read_tsv(file = "data/03_genes_sorted_by_highest_logFC_per_time.tsv")
+data_log2 <- read_tsv(file = "data/03_data_logFC_for_time.tsv")
 data_PCA_kmeans <- read_tsv("data/03_data_normalized_counts.tsv") 
 
 # Heat map ----------------------------------------------------------
-data_normalized_long <- data_heatmap %>%
+data_normalized_long <- data_mean_over_replicates %>%
   unite("experiment", 
         treatment,
         time,
@@ -51,16 +52,56 @@ heatmap_plot <- data_zscore %>%
         axis.text.y = element_blank())
 
 # Top expression ----------------------------------------------------------
+# Creating a list of sorted genes
+# Creating long version of log2
+log2_diff_long <- data_log2 %>%
+  pivot_longer(cols = -time,
+               names_to = "genes",
+              values_to = "log2_diff")
 
-# Select the top 20 differentially expressed genes for plotting
-n_genes = 20
-data_sorted_long_top20 <- top_genes_wide_to_long(data_top_expr, num_genes = n_genes)
+# Sort the genes by log2_diff and then time (high to low)
+sorted_genes <- log2_diff_long %>%
+  arrange(desc(log2_diff)) %>%
+  arrange(desc(time)) %>%
+  select(genes, time)
+
+# Get the means in long format
+data_mean <- data_mean_over_replicates %>%
+  select(treatment,
+         time,
+         genes,
+         mean_over_replicates) %>%
+  distinct
+
+# Change to order of the data mean long after highest logfold expression
+sorted_means <- sorted_genes %>%
+  full_join(x = .,
+            y = data_mean,
+            by = c("genes", "time"))
+
+# Convert the sorted means back to tidy data format
+sorted_means_wide <- sorted_means %>%
+  pivot_wider(names_from = "genes",
+              values_from = "mean_over_replicates")
+
+
+# Select the top 20 differentially expressed genes for plottin
+n = 20
 # Get the order of highest log fold expression
 order_names <- top_gene_order(data_sorted_long20,
                               num_genes = n_genes)
 
-ggplot(data = data_sorted_long20,
-       mapping = aes(factor(gene, level = order_names),
+data_sorted_long_top20 <- sorted_means %>%
+  select(1:all_of(n_genes+2)) 
+
+# How to get the top genes from the list above
+data_top20 <- sorted_means %>%
+  filter(treatment == "Control") %>%
+  slice_head(n = 20)
+
+# Plot
+ggplot(data = data_top20,
+       mapping = aes(factor(genes, level = order_names),
                      count,
                      color = time,
                      shape=treatment)) +
@@ -85,9 +126,19 @@ data_sorted_long_top8 <- top_genes_wide_to_long(data_top_expr,
 data_sorted_long_bottom8 <- bottom_genes_wide_to_long(data_top_expr,
                                                       num_genes = 8)
 
+#How to get the top and bottom 8 from the list above
+data_top8 <- sorted_means %>%
+  filter(treatment == "Control") %>%
+  slice_head(n = 8)
+
+data_bottom8 <- sorted_means %>%
+  filter(treatment == "Control",
+         time == "24") %>%
+  slice_tail(n = 8)
+
 # Plot the expression of these selected genes over time
-top_exp_plot <- ggplot(data = data_sorted_long_top8,
-                  aes(time, count,
+top_exp_plot <- ggplot(data = data_bottom8,
+                  aes(x = time, y = count,
                       shape = treatment)) +
   geom_point(size = 3,
              alpha = 0.5) +
@@ -146,14 +197,6 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
 
 
 top_bottom <- top_exp_plot / bottom_exp_plot
-
-top_bottom
-
-ggsave(path = "results",
-       filename = "04_top_and_bottom_8_over_time.png",
-       width = 11,
-       height = 10)
-
 
 # PCA and Kmeans ----------------------------------------------------------
 
@@ -265,6 +308,15 @@ ggsave(path = "results",
                         as.character(num_genes),
                         ".png"), 
        plot = top_expression_plot)
+
+ggsave(path = "results",
+       filename = "04_top_and_bottom_8_over_time.png",
+       width = 11,
+       height = 10)
+
+# Save sorted means
+write_tsv(x = sorted_means_wide,
+          file = "results/04_genes_sorted_by_highest_logFC_per_time.tsv")
 
 # Save PCA and K-means plots
 ggsave(path = "results",
