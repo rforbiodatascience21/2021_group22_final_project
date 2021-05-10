@@ -22,9 +22,10 @@ data_normalized_long <- data_mean_over_replicates %>%
         time,
         sep = "_",
         remove = TRUE) %>%
-  select(experiment, genes,
+  select(experiment, 
+         genes,
          mean_over_replicates) %>%
-  distinct()
+  distinct
 
 # Calculate z-score
 data_zscore <- data_normalized_long %>%
@@ -35,7 +36,8 @@ data_zscore <- data_normalized_long %>%
          z_score = count_minus_mean/sd_of_counts_for_gene) %>%
   ungroup() %>%
   select(experiment,
-         genes, z_score)
+         genes, 
+         z_score)
 
 # Plot and save heatmap
 heatmap_plot <- data_zscore %>%
@@ -46,8 +48,8 @@ heatmap_plot <- data_zscore %>%
   geom_tile() +
   scale_fill_gradient2(low = "yellow",
                        high = "red") + 
-  theme(axis.ticks.y = element_blank(),
-        axis.text.y = element_blank()) +
+  theme(axis.ticks.y = element_blank,
+        axis.text.y = element_blank) +
   ggtitle("Protein levels across all samples -standardized using z-scoring")
 
 # Top expression ----------------------------------------------------------
@@ -87,19 +89,20 @@ sorted_means_wide <- sorted_means %>%
 # Select the top 20 differentially expressed genes for plotting
 data_sorted_long <- sorted_means_wide %>%
   select(1:22) %>%
-  pivot_longer(!c(treatment, time),
+  pivot_longer(-c(treatment, time),
                names_to = "genes",
                values_to = "mean_over_replicates")
 
 order_names <- data_sorted_long %>%
-  ungroup() %>%
+  ungroup %>%
   slice_head(n=20) %>%
   pull(genes) %>%
-  factor()
+  factor
 
 # Plot
 top_20_genes <- ggplot(data = data_sorted_long,
-       mapping = aes(factor(genes, level = factor(order_names)),
+       mapping = aes(factor(genes, 
+                            level = factor(order_names)),
                      mean_over_replicates,
                      color = time,
                      shape = treatment)) +
@@ -114,20 +117,23 @@ top_20_genes <- ggplot(data = data_sorted_long,
 # Now get just the top 8, as well as the bottom 8 (underexpressed)
 data_sorted_long_top8 <- sorted_means_wide %>%
   select(1:10) %>%
-  pivot_longer(!c(treatment, time),
+  pivot_longer(-c(treatment, 
+                  time),
                names_to = "genes",
                values_to = "mean_over_replicates")
 
 
 data_sorted_long_bottom8 <- sorted_means_wide %>%
   select(-c(3:last_col(8))) %>%
-  pivot_longer(!c(treatment, time),
+  pivot_longer(-c(treatment, 
+                  time),
                names_to = "genes",
                values_to = "mean_over_replicates")
 
 # Plot the expression of these selected genes over time
 top_exp_plot <- ggplot(data = data_sorted_long_top8,
-                  aes(x = time, y = mean_over_replicates,
+                  aes(x = time, 
+                      y = mean_over_replicates,
                       shape = treatment)) +
   geom_point(size = 3,
              alpha = 0.5) +
@@ -135,23 +141,20 @@ top_exp_plot <- ggplot(data = data_sorted_long_top8,
   theme_minimal() +
   ylab("count") +
   scale_x_discrete(limits=c(2, 6, 10, 24)) +
-  
   scale_alpha(guide = 'none') +
   scale_size(guide = 'none') +
   ggtitle("Top 8 overexpressed genes in (virus, 24h)") +
-  
   geom_line(aes(color = genes)) +
-  geom_text_repel(aes(label=ifelse(time==24, genes, '')),
+  geom_text_repel(aes(label=ifelse(time==24, 
+                                   genes, 
+                                   '')),
                   hjust=2,
                   size=2.6,
                   xlim=c(24, 30)) +
-  
   guides(color=FALSE) +
-  
   theme(legend.position=c(0.1,0.9),
-        legend.background = element_rect(),
+        legend.background = element_rect,
         plot.margin=unit(c(10,100,10,10), "points")) +
-  
   coord_cartesian(clip="off")
 
 # Plot bottom
@@ -165,23 +168,21 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
   theme_minimal() +
   ylab("count") +
   scale_x_discrete(limits=c(2, 6, 10, 24)) +
-  
   scale_alpha(guide = 'none') +
   scale_size(guide = 'none') +
   ggtitle("Bottom 8 underexpressed genes in (virus, 24h)") +
-  
   geom_line(aes(color = genes)) +
-  geom_text_repel(aes(label=ifelse(time==24, genes, '')),
+  geom_text_repel(aes(label=ifelse(time==24, 
+                                   genes, 
+                                   '')),
                   hjust=2,
                   size=2.6,
                   xlim=c(24, 30)) +
-  
   guides(color=FALSE) +
-  
   theme(legend.position=c(0.1,0.1),
         legend.background = element_rect(),
-        plot.margin=unit(c(10,100,10,10), "points")) +
-  
+        plot.margin=unit(c(10,100,10,10), 
+                         "points")) +
   coord_cartesian(clip="off")
 
 # Combine top and bottom
@@ -235,8 +236,10 @@ variance_PCA <- PCA_analysis %>%
 # getting PCA projected coordinates using broom
 augment_PCA <- PCA_analysis %>% 
   augment(PCA_data) %>% 
-  mutate(treatment = case_when(str_detect(string = experiment, pattern = "^Virus") == TRUE ~"Corona",
-                               str_detect(string = experiment, pattern = "^Control") == TRUE ~"Control"))
+  mutate(treatment = case_when(str_detect(string = experiment, 
+                                          pattern = "^Virus") == TRUE ~"Corona",
+                               str_detect(string = experiment, 
+                                          pattern = "^Control") == TRUE ~"Control"))
 
 # making scree plot
 scree_plot <- variance_PCA %>% 
