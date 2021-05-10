@@ -15,9 +15,7 @@ data_tab3 <- read_tsv("05_linear_model_time_results.tsv")
 # Wrangle data ------------------------------------------------------------
 ## Tab 1
 data_times_seperated <- data_tab1 %>% 
-  mutate(time_as_numeric = as.numeric(str_extract(time, "\\d+"))) 
-
-data_time_model <- read_tsv("05_linear_model_time_results.tsv")
+  mutate(time_as_factor = as_factor(time)) 
 
 # Making list of genes to choose between: 
 unique_gene_names <- data_times_seperated %>% 
@@ -153,7 +151,7 @@ server <- function(input, output) {
   # Tab 3 -----
   output$myplot <- renderPlot({
     ggplot(temp_tibble_for_plotting(),
-           mapping = aes(x = fct_reorder(time,time_as_numeric),
+           mapping = aes(x = fct_reorder(time_as_factor,time),
                          y = normalized_counts,
                          fill = treatment,
                          color = significance)) +
