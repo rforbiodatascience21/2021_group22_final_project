@@ -79,7 +79,7 @@ include_graphics("/cloud/project/results/flowchart.png")
 - Normalization is due to different samplesizes
 - **FPKM** equivalent **not feasible**
   - **Big genes** are not necessarily translated more 
-- On data frame iskept that has **ALL** the replicate information
+- One data frame is kept that has **ALL** the replicate information
 
 ## Data augmentation
 
@@ -116,7 +116,7 @@ include_graphics("/cloud/project/results/flowchart.png")
 # Results
 
 ## Heatmap
-```{r, echo = FALSE, out.width = "1000px"}
+```{r, echo = FALSE, out.width = "500px"}
 knitr::include_graphics("/cloud/project/results/04_Heatmap.png")
 ```
 
@@ -142,12 +142,6 @@ knitr::include_graphics("/cloud/project/results/04_top_8_over_time.png")
 knitr::include_graphics("/cloud/project/results/04_bottom_8_over_time.png")
 ```
 
-## Shiny app
-```{r, echo=FALSE}
-include_app("https://signe-hjort.shinyapps.io/shiny/", height = "500px")
-```
-
-
 ## Project overview and structure
 ```{r, echo = FALSE, out.width = "800px"}
 include_graphics("/cloud/project/results/flowchart.png")
@@ -156,12 +150,13 @@ include_graphics("/cloud/project/results/flowchart.png")
 
 # Discussion
 
-
 ## Results
 
 - A lot of the upregulated genes are in the corona genome
 - Good sanity check but not the most interesting finding
 - Further research into the **host DE-genes**
+- Changes occur after 24 hours -incubation time
+- Data came from colon epithelial cells while corona virus attacks respiratory cells
 
 ## Shiny app 
 
@@ -170,4 +165,11 @@ include_graphics("/cloud/project/results/flowchart.png")
 
 ## Workflow and methods
 
-- 
+- Dataset makes it necessary to work in long format
+- More information about function of genes and roles in pathways 
+
+## Shiny app
+```{r, echo=FALSE}
+include_app("https://signe-hjort.shinyapps.io/shiny/", height = "500px")
+```
+
