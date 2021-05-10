@@ -9,7 +9,6 @@ library("ggrepel")
 library("viridis")          
 
 
-source(file = "R/99_functions.R")
 
 # Load data ---------------------------------------------------------------
 data_mean_over_replicates <- read_tsv("data/03_data_normalized_count_mean_over_replicates.tsv")
@@ -85,30 +84,29 @@ sorted_means_wide <- sorted_means %>%
               values_from = "mean_over_replicates")
 
 
-# Select the top 20 differentially expressed genes for plottin
-n = 20
-# Get the order of highest log fold expression
-order_names <- top_gene_order(data_sorted_long20,
-                              num_genes = n_genes)
+# Select the top 20 differentially expressed genes for plotting
+data_sorted_long <- sorted_means_wide %>%
+  select(1:22) %>%
+  pivot_longer(!c(treatment, time),
+               names_to = "genes",
+               values_to = "mean_over_replicates")
 
-data_sorted_long_top20 <- sorted_means %>%
-  select(1:all_of(n_genes+2)) 
-
-# How to get the top genes from the list above
-data_top20 <- sorted_means %>%
-  filter(treatment == "Control") %>%
-  slice_head(n = 20)
+order_names <- data_sorted_long %>%
+  ungroup() %>%
+  slice_head(n=20) %>%
+  pull(genes) %>%
+  factor()
 
 # Plot
-ggplot(data = data_top20,
-       mapping = aes(factor(genes, level = order_names),
-                     count,
+ggplot(data = data_sorted_long,
+       mapping = aes(factor(genes, level = factor(order_names)),
+                     mean_over_replicates,
                      color = time,
-                     shape=treatment)) +
+                     shape = treatment)) +
   geom_point() +
   theme(axis.text.x = element_text(angle = -45,
                                    vjust = -0.6,
-                                   hjust=0.4)) +
+                                   hjust = 0.4)) +
   xlab("Top genes (by differential expression)") +
   ylab("log(count)") +
   scale_y_log10()
@@ -120,25 +118,22 @@ ggsave(path = "results",
                         sep=""))
 
 # Now get just the top 8, as well as the bottom 8 (underexpressed)
-data_sorted_long_top8 <- top_genes_wide_to_long(data_top_expr,
-                                                num_genes = 8)
+data_sorted_long_top8 <- sorted_means_wide %>%
+  select(1:10) %>%
+  pivot_longer(!c(treatment, time),
+               names_to = "genes",
+               values_to = "mean_over_replicates")
 
-data_sorted_long_bottom8 <- bottom_genes_wide_to_long(data_top_expr,
-                                                      num_genes = 8)
 
-#How to get the top and bottom 8 from the list above
-data_top8 <- sorted_means %>%
-  filter(treatment == "Control") %>%
-  slice_head(n = 8)
-
-data_bottom8 <- sorted_means %>%
-  filter(treatment == "Control",
-         time == "24") %>%
-  slice_tail(n = 8)
+data_sorted_long_bottom8 <- sorted_means_wide %>%
+  select(-c(3:last_col(8))) %>%
+  pivot_longer(!c(treatment, time),
+               names_to = "genes",
+               values_to = "mean_over_replicates")
 
 # Plot the expression of these selected genes over time
-top_exp_plot <- ggplot(data = data_bottom8,
-                  aes(x = time, y = count,
+top_exp_plot <- ggplot(data = data_sorted_long_top8,
+                  aes(x = time, y = mean_over_replicates,
                       shape = treatment)) +
   geom_point(size = 3,
              alpha = 0.5) +
@@ -151,8 +146,8 @@ top_exp_plot <- ggplot(data = data_bottom8,
   scale_size(guide = 'none') +
   ggtitle("Top 8 overexpressed genes in (virus, 24h)") +
   
-  geom_line(aes(color = gene)) +
-  geom_text_repel(aes(label=ifelse(time==24, gene, '')),
+  geom_line(aes(color = genes)) +
+  geom_text_repel(aes(label=ifelse(time==24, genes, '')),
                   hjust=2,
                   size=2.6,
                   xlim=c(24, 30)) +
@@ -168,7 +163,7 @@ top_exp_plot <- ggplot(data = data_bottom8,
 
 bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
                      mapping = aes(x = time,
-                         y = count,
+                         y = mean_over_replicates,
                          shape = treatment)) +
   geom_point(size = 3,
              alpha = 0.5) +
@@ -181,8 +176,8 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
   scale_size(guide = 'none') +
   ggtitle("Bottom 8 underexpressed genes in (virus, 24h)") +
   
-  geom_line(aes(color = gene)) +
-  geom_text_repel(aes(label=ifelse(time==24, gene, '')),
+  geom_line(aes(color = genes)) +
+  geom_text_repel(aes(label=ifelse(time==24, genes, '')),
                   hjust=2,
                   size=2.6,
                   xlim=c(24, 30)) +
