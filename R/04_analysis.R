@@ -48,7 +48,7 @@ heatmap_plot <- data_zscore %>%
                        high = "red") + 
   theme(axis.ticks.y = element_blank(),
         axis.text.y = element_blank()) +
-  ggtitle("Protein levels across all samples -standardized using z-scoring") +
+  ggtitle("Protein levels across all samples -standardized using z-scoring")
 
 # Top expression ----------------------------------------------------------
 # Creating a list of sorted genes
@@ -289,7 +289,7 @@ K_means_plot <- K_means_data %>%
 # Save heatmap
 ggsave(path = "results",
        filename = "04_Heatmap.png", 
-       plot = heatmap_plot )
+       plot = heatmap_plot)
 
 # Save top expression
 ggsave(path = "results",
