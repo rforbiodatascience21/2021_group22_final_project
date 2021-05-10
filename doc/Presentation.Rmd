@@ -84,51 +84,57 @@ include_graphics("/cloud/project/results/flowchart.png")
 ## Data augmentation
 
 - We calculated **means** for **conditions** over **replicates**. 
-- 
+- Since this is **loss** of information we saved new data tibble
 
 
-- Normalize mean within each group of replicates.
-- Mean of replicates
-- Log2 fold change between control and infected samples
-- Output saved in three files
+## Data augmentation
 
-## heatmap
-## top expression
-## PCA
-## Kmeans
+- We used the triplicate means to calculate a **Log fold change**
+- Log fold change was calculated between **treatment** at the different **timepoints**
+- Saved a **new data frame**
 
 
+## Exploratory Analysis
+
+- **PCA** was performed to check for groupings in the normalized **count** data
+- K-means to see if any particular **grouping** showed up
+- A **heatmap** was also constructed to look for gene clusters with similar expression
 
 
+## Exploratory Analysis
 
-
-
-## Analysis
-
-### Log2 fold change
-- Log2 fold change
-- Top and bottom differentially expressed genes
-
-- Maybe also some focus on why we chose to do so many different scripts for the plots
-
-
+- The **LogFC** the top 20 and top 8 **DE** genes were found
 
 
 ## Modelling
 
+- **Linear models** were used to test:
+  - Does **logFC** of genes change significantly **over time**
+  - Do we see significant **differences** between **Counts** at individual **time points**
+
 
 # Results
-## PCA
-```{r, echo = FALSE, out.width = "1000px"}
-#knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
-```
----
 
 ## Heatmap
 ```{r, echo = FALSE, out.width = "1000px"}
 knitr::include_graphics("/cloud/project/results/04_Heatmap.png")
 ```
 
+## PCA
+```{r, echo = FALSE, out.width = "1000px"}
+knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
+```
+
+## K-means on PCA
+```{r, echo = FALSE, out.width = "1000px"}
+knitr::include_graphics("/cloud/project/results/04_Kmeans_plot.png")
+```
+
+## Top DE-genes
+
+```{r, echo = FALSE, out.height = "600px"}
+knitr::include_graphics("/cloud/project/results/04_top_and_bottom_8_over_time.png")
+```
 
 
 ## Shiny app
@@ -138,7 +144,7 @@ include_app("https://signe-hjort.shinyapps.io/shiny/", height = "500px")
 
 
 ## Project overview and structure
-```{r}
+```{r, echo = FALSE, out.width = "800px"}
 include_graphics("/cloud/project/results/flowchart.png")
 ```
 
