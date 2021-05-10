@@ -14,7 +14,7 @@ data_tab2 <- read_tsv("03_genes_sorted_by_highest_logFC_per_time.tsv")
 data_tab3 <- read_tsv("05_linear_model_time_results.tsv")
 
 # Wrangle data ------------------------------------------------------------
-# Tab 1
+## Tab 1
 data_for_plot <- data_for_plot_raw %>%
   pivot_longer(cols = c(-treatment, -time),
                names_to = "genes",
@@ -31,6 +31,7 @@ unique_gene_names <- data_times_seperated %>%
   distinct() %>% 
   arrange(genes)
 
+## Tab 3
 # Chosing only variables needed forplotting 
 time_model_for_plotting <- data_tab3 %>% 
   rename(time_stamp = time) %>% 
