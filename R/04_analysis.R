@@ -108,6 +108,7 @@ top_20_genes <- ggplot(data = data_sorted_long,
   theme(axis.text.x = element_text(angle = -45,
                                    vjust = -0.6,
                                    hjust = 0.4)) +
+  ggtitle("Top 20 genes (virus, 24h)") +
   xlab("Top genes (by differential expression)") +
   ylab("count") +
   scale_y_log10()
@@ -184,8 +185,6 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
 
 # Combine top and bottom
 top_bottom <- top_exp_plot / bottom_exp_plot
-
-top_exp_plot / bottom_exp_plot
 
 # PCA and Kmeans ----------------------------------------------------------
 
@@ -296,7 +295,7 @@ ggsave(path = "results",
 # Save top expression
 ggsave(path = "results",
        filename = str_c("04_diffexpGenes_top20.png"), 
-       plot = top_exp_plot)
+       plot = top_20_genes)
 
 ggsave(path = "results",
        filename = "04_top_and_bottom_8_over_time.png",
