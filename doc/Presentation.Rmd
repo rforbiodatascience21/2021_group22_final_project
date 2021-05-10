@@ -126,7 +126,7 @@ knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
 ```
 
 ## K-means on PCA
-```{r, echo = FALSE, out.width = "1000px"}
+```{r, echo = FALSE, out.width = "800px"}
 knitr::include_graphics("/cloud/project/results/04_Kmeans_plot.png")
 ```
 
