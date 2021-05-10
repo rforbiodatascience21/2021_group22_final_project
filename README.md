@@ -1,9 +1,10 @@
 # Proteomics of SARS-Cov-2-infected host cells
 Exam project of group 22 in the course R for Bio Data Science (22100).
 
-**FLOW CHART**  
-### Repository overview  
-Input the repository figure when done
+## Repository overview
+```{r, echo = FALSE, out.width = "800px"}
+include_graphics("/cloud/project/results/flowchart.png")
+```
 
 ## Description
 This project analyses proteomics data from a study of the effects of SARS-Cov-2 infection on host cells. The aim is to perform a full, tidy data analysis of the proteomics data.
