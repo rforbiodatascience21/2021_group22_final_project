@@ -4,7 +4,7 @@ library("shiny")
 library("shinythemes")
 library("patchwork")
 
-#setwd("/cloud/project/shiny")
+setwd("/cloud/project/shiny")
 source(file = "99_functions.R")
 
 # Load data ---------------------------------------------------------------
@@ -50,12 +50,12 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                     ),
                            tabPanel("Plot top genes",
                                     sidebarPanel(sliderInput("numGenes",
-                                                             "Number of genes (top): ",
+                                                             "Number of upregulated genes: ",
                                                              min = 1,
                                                              max = 50,
                                                              value = 25),
                                                  sliderInput("numGenes2",
-                                                             "Number of genes (bottom): ",
+                                                             "Number of downregulated genes: ",
                                                              min = 1,
                                                              max = 50,
                                                              value = 25),
