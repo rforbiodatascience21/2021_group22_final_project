@@ -36,7 +36,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Project data
 
-- Data obtained from Bojkova *et al.*
+- Data obtained from [Bojkova *et al.*](https://doi.org/10.1038/s41586-020-2332-7)
 - Infection profile of SARS-CoV-2 using a human cell-culture model.
   - Infection (**Corona**) or **mock**-infection of **Caco-2** (colon epithilial carcinoma cells)
 
