@@ -19,11 +19,13 @@ data_normalized <- data_clean %>%
   group_by(experiment) %>% 
   mutate(total_counts = sum(counts),
          normalized_counts = (6000000/total_counts)*counts, 
-         time = as.numeric(str_extract(time, "\\d+"))) %>%   
+         time = as.numeric(str_extract(time, 
+                                       "\\d+"))) %>%   
   ungroup() %>% 
   select(c(-counts,
            -total_counts)) %>% 
-  pivot_wider(names_from = genes, values_from = normalized_counts)
+  pivot_wider(names_from = genes, 
+              values_from = normalized_counts)
 
 # Calculate means of the normalized data
 data_normalized_mean_across_replicates <- data_normalized %>% 
@@ -58,12 +60,14 @@ data_mean <- data_normalized_mean_across_replicates %>%
 
 # Log2 transform all gene expression variables
 data_log2 <- data_mean %>%
-  mutate_at(vars(-c(treatment, time)),
+  mutate_at(vars(-c(treatment, 
+                    time)),
             log2)
 
 # Calculate log2 diff for each gene
 data_log2_diff_long <- data_log2 %>%
-  pivot_longer(cols = c(-time, -treatment),
+  pivot_longer(cols = c(-time, 
+                        -treatment),
                names_to = "genes",
                values_to = "log2") %>%
   pivot_wider(names_from = "treatment",
@@ -71,7 +75,8 @@ data_log2_diff_long <- data_log2 %>%
   group_by(time) %>% 
   mutate(log2_diff = Virus-Control) %>%
   ungroup %>%
-  select(-Virus, -Control)
+  select(-Virus, 
+         -Control)
 
 # Convert back to tidy data 
 log2_diff <- data_log2_diff_long %>%
