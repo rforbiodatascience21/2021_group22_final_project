@@ -21,7 +21,7 @@ data_normalized <- data_clean %>%
          normalized_counts = (6000000/total_counts)*counts, 
          time = as.numeric(str_extract(time, 
                                        "\\d+"))) %>%   
-  ungroup() %>% 
+  ungroup %>% 
   select(c(-counts,
            -total_counts)) %>% 
   pivot_wider(names_from = genes, 
@@ -39,7 +39,7 @@ data_normalized_mean_across_replicates <- data_normalized %>%
            time,
            genes) %>% 
   mutate(mean_over_replicates = mean(normalized_counts)) %>% 
-  ungroup() %>% 
+  ungroup %>% 
   select(treatment,
          time,
          genes,
@@ -61,8 +61,7 @@ data_mean <- data_normalized_mean_across_replicates %>%
 # Log2 transform all gene expression variables
 data_log2 <- data_mean %>%
   mutate_at(vars(-c(treatment, 
-                    time)),
-            log2)
+                    time)), log2)
 
 # Calculate log2 diff for each gene
 data_log2_diff_long <- data_log2 %>%
