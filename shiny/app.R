@@ -9,7 +9,7 @@ source(file = "99_functions.R")
 
 # Load data ---------------------------------------------------------------
 data_for_plot_raw <- read_tsv("03_data_mean_log2.tsv")
-data_for_plot_raw
+data_tab2 <- read_tsv("03_genes_sorted_by_highest_logFC_per_time.tsv")
 
 # Wrangle data ------------------------------------------------------------
 #prepare data for plot
@@ -17,10 +17,6 @@ data_for_plot <- data_for_plot_raw %>%
   pivot_longer(cols = c(-treatment, -time),
                names_to = "genes",
                values_to = "log_fold_change") 
-
-
-
-# Loading data first panel ------------------------------------------------
 
 
 data_times_seperated <- read_tsv("05_individual_times_ttest_and_data.tsv") %>% 
@@ -38,15 +34,11 @@ unique_gene_names <- data_times_seperated %>%
 time_model_for_plotting <- data_time_model %>% 
   rename(time_stamp = time) %>% 
   pivot_wider(names_from = term,
-              values_from = c(estimate, std.error),
-              id_cols = c(Gene, time_stamp, LogFC))
-
-# Loading data second panel -----------------------------------------------
-
-data_tab2 <- read_tsv("03_genes_sorted_by_highest_logFC_per_time.tsv")
-
-
-
+              values_from = c(estimate, 
+                              std.error),
+              id_cols = c(Gene, 
+                          time_stamp, 
+                          LogFC))
 
 # App creation ------------------------------------------------------------
 # Define UI
@@ -92,8 +84,8 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
 
 # Define server function  
 server <- function(input, output) {
-  # tab 1 tibble for top panel 
-  
+  #tab1 -----
+  # Tibble for top panel 
   temp_tibble_for_plotting <- reactive(data_times_seperated  %>% 
     filter(genes == input$Selected_gene))
   
