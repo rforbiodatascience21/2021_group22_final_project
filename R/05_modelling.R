@@ -17,14 +17,15 @@ model_nested <- data_log2 %>%
                names_to = "Gene", 
                values_to = "LogFC") %>%
   group_by(Gene) %>% 
-  nest() %>%
-  ungroup() %>%
+  nest %>%
+  ungroup %>%
   mutate(model = map(.x = data, 
                      .f = ~glm(formula = LogFC ~ time, data = .x)))
 
 # Add more model statistics using broom
 model_nested <- model_nested %>%
-  mutate(tidymodel = map(.x = model, .f = ~tidy(.x))) %>%
+  mutate(tidymodel = map(.x = model, 
+                         .f = ~tidy(.x))) %>%
   unnest(tidymodel) 
 
 # Unnest the data again for later plotting
@@ -38,19 +39,20 @@ set.seed(934485)
 
 data_DE <-  data %>% 
   group_by(genes) %>% 
-  nest() %>% 
-  ungroup() %>% 
+  nest %>% 
+  ungroup %>% 
   unnest(cols = data)
 
 data_DE_analysis_nested <- data_DE %>% 
   group_by(time, genes) %>% 
-  nest() %>% 
+  nest %>% 
   mutate(mdl = map(.x = data,
                    .f = ~glm(data = .x,
                    formula = normalized_counts ~ treatment))) 
 
 data_tidy_model <- data_DE_analysis_nested %>% 
-  mutate(mdl_tidy = map(.x = mdl, ~tidy(.x, conf.int=TRUE))) %>%
+  mutate(mdl_tidy = map(.x = mdl, 
+                        ~tidy(.x, conf.int=TRUE))) %>%
   unnest(mdl_tidy)
 
 augmented_model_results <- data_tidy_model %>% 
@@ -59,8 +61,13 @@ augmented_model_results <- data_tidy_model %>%
          significance = case_when(p.value >= 0.05 ~ "Not significant",
                                   p.value < 0.05 ~ "Significant")) %>% 
   filter(term == "treatmentVirus") %>% 
-  select(genes, time, data, estimate, 
-         p.value, regulation, significance) %>% 
+  select(genes, 
+         time, 
+         data, 
+         estimate, 
+         p.value, 
+         regulation, 
+         significance) %>% 
   unnest(data)
 
 # Write data --------------------------------------------------------------
