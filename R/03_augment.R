@@ -27,8 +27,12 @@ data_normalized <- data_clean %>%
 
 # Calculate means of the normalized data
 data_normalized_mean_across_replicates <- data_normalized %>% 
-  select(c(-counts,
-           -total_counts)) %>% 
+  pivot_longer(cols = c(-experiment,
+                        -treatment,
+                        -time,
+                        -replicate),
+               names_to = "genes", 
+               values_to = "normalized_counts") %>% 
   group_by(treatment,
            time,
            genes) %>% 
@@ -40,7 +44,7 @@ data_normalized_mean_across_replicates <- data_normalized %>%
          replicate,
          normalized_counts,
          mean_over_replicates) %>% 
-  distinct() 
+  distinct 
 
 # Convert back to tidy data with the normalized mean for each gene
 data_mean <- data_normalized_mean_across_replicates %>%
@@ -48,7 +52,7 @@ data_mean <- data_normalized_mean_across_replicates %>%
          time,
          genes,
          mean_over_replicates) %>%
-  distinct() %>%
+  distinct %>%
   pivot_wider(names_from = "genes",
               values_from = "mean_over_replicates")
 
@@ -66,7 +70,7 @@ data_log2_diff_long <- data_log2 %>%
               values_from = "log2") %>%
   group_by(time) %>% 
   mutate(log2_diff = Virus-Control) %>%
-  ungroup() %>%
+  ungroup %>%
   select(-Virus, -Control)
 
 # Convert back to tidy data 
