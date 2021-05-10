@@ -11,9 +11,9 @@ library("viridis")
 
 
 # Load data ---------------------------------------------------------------
-data_mean_over_replicates <- read_tsv("data/03_data_normalized_count_mean_over_replicates.tsv")
+data_mean_over_replicates <- read_tsv(file = "data/03_data_normalized_count_mean_over_replicates.tsv")
 data_log2 <- read_tsv(file = "data/03_data_logFC_for_time.tsv")
-data_PCA_kmeans <- read_tsv("data/03_data_normalized_counts.tsv") 
+data_PCA_kmeans <- read_tsv(file = "data/03_data_normalized_counts.tsv") 
 
 # Heat map ----------------------------------------------------------
 data_normalized_long <- data_mean_over_replicates %>%
