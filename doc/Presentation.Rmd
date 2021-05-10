@@ -116,7 +116,7 @@ include_graphics("/cloud/project/results/flowchart.png")
 # Results
 
 ## Heatmap
-```{r, echo = FALSE, out.width = "1000px"}
+```{r, echo = FALSE, out.width = "500px"}
 knitr::include_graphics("/cloud/project/results/04_Heatmap.png")
 ```
 
@@ -162,6 +162,8 @@ include_graphics("/cloud/project/results/flowchart.png")
 - A lot of the upregulated genes are in the corona genome
 - Good sanity check but not the most interesting finding
 - Further research into the **host DE-genes**
+- Changes occur after 24 hours -incubation time
+- Data came from colon epithelial cells while corona virus attacks respiratory cells
 
 ## Shiny app 
 
@@ -170,4 +172,5 @@ include_graphics("/cloud/project/results/flowchart.png")
 
 ## Workflow and methods
 
-- 
+- Dataset makes it necessary to work in long format
+- More information about function of genes and roles in pathways 
