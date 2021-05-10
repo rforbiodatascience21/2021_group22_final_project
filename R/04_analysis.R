@@ -107,7 +107,7 @@ top_20_genes <- ggplot(data = data_sorted_long,
                                    vjust = -0.6,
                                    hjust = 0.4)) +
   xlab("Top genes (by differential expression)") +
-  ylab("log(count)") +
+  ylab("count") +
   scale_y_log10()
 
 # Now get just the top 8, as well as the bottom 8 (underexpressed)
@@ -132,7 +132,7 @@ top_exp_plot <- ggplot(data = data_sorted_long_top8,
              alpha = 0.5) +
   scale_y_log10() +
   theme_minimal() +
-  ylab("log(count)") +
+  ylab("count") +
   scale_x_discrete(limits=c(2, 6, 10, 24)) +
   
   scale_alpha(guide = 'none') +
@@ -162,7 +162,7 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
              alpha = 0.5) +
   scale_y_log10() +
   theme_minimal() +
-  ylab("log(count)") +
+  ylab("count") +
   scale_x_discrete(limits=c(2, 6, 10, 24)) +
   
   scale_alpha(guide = 'none') +
