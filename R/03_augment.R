@@ -20,7 +20,10 @@ data_normalized <- data_clean %>%
   mutate(total_counts = sum(counts),
          normalized_counts = (6000000/total_counts)*counts, 
          time = as.numeric(str_extract(time, "\\d+"))) %>%   
-  ungroup() 
+  ungroup() %>% 
+  select(c(-counts,
+           -total_counts)) %>% 
+  pivot_wider(names_from = genes, values_from = normalized_counts)
 
 # Calculate means of the normalized data
 data_normalized_mean_across_replicates <- data_normalized %>% 
