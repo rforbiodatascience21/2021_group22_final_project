@@ -1,12 +1,13 @@
 ---
 title: "SARS-CoV-2 protein expression"
 subtitle: "Final project in R for Bio Data Science (22100)"
-author: "Alban Laus Obel Slabowska (s200347), Astrid Rasmussen (s193254), Jens Waaben (s205972), Signe Katrine Hjort (s174587), Signe Fischer Ravn (s175410)"
+author: 
+- Alban Laus Obel Slabowska (s200347), Astrid Rasmussen (s193254), Jens Waaben (s205972), 
+- Signe Katrine Hjort (s174587), Signe Fischer Ravn (s175410)
 date: 12-05-2021
 output:
   ioslides_presentation:
     widescreen: true
-runtime: shiny
 ---
 
 ```{r setup, include = FALSE}
@@ -21,25 +22,34 @@ knitr::opts_chunk$set(echo = FALSE)
 - SARS-CoV-2 emerged at the end of 2019 as the cause of COVID-19.
 - High infectivity has resulted in a still ongoing pandemic.
 - There is no current treatment.
+- **Not a lot of knowledge about consequences og corno infection, gene knowledge  **
 
+## Project Aim
 - To investigate the infection profile of SARS-CoV-2 Bojkova *et al.* used a human cell-culture model. They infected the cells with an isolate of SARS-CoV-2 and looked at protein expression at four different time points after infection.
 
-
-## Project data and aim
 *Aim: To analyse proteomics data and communicate the findings to non-bioinformaticians in a way that enables them to get information about their genes of choice.  *
 
+## Project data and aim
 - Data from 
   - Use proteomics to get a profile of the host cell response to infection with SARS-CoV-2.
   - Determine genes and pathways that are altered during infection.
   
 
-## Project overview and structure
-```{r, echo = FALSE, out.width = "650px",}
-knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
-```
-**insert picture of structure**
+
+
+
+
 
 # Materials and methods
+
+## Project overview
+project overview - figure ind - det kommer vi tilbage til senere også.
+Kun en figur!!
+Process, hvordan er det hele skruet sammen, emphasis på hvordan projectete er skruet sammen.
+
+*Vi har arbejdet med R, github, projektarbejde, sådan har vi arbejdet sammen og det har vi gjort.*
+
+
 
 ## Data cleaning
 - Dataset consisting of two files to be joined: Gene counts and sample information.  
@@ -49,12 +59,30 @@ knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
   - Rename variables.
 - inner_join()
 
+*Der er 3 fikler i raw, men vi vælger kun at bruge to af dem, hvorfor vælgger vi disse, bruger ikke sidste, hvad den er - **ikke relevans**.*
+
 ## Data augmentation
 - Find and normalize mean within each group of replicates.
 - Find log2 fold change
 
+- første: normalisere, ikke lige antal i hver
+- replikater, bruger til dels til at modellere (figur fra Jens - data_norm...), giver info at have replikater, kan ikke bare fjerne og for at lave logFC. Derfor vi er endt med at have mere end en fil, vi har database med norm-counts, men også andre der skal bruges flere gange senere.
+- logFC mellem grupperne.
 
-## Exploratory data analysis
+
+**Top expressed genes**
+- finder top og bund ekspressereded gener ved at sortere inde i analysen.
+
+
+
+## Analysis
+
+
+
+- LogFC
+
+
+
 - Maybe also some focus on why we chose to do so many different scripts for the plots
 
 ## Modelling
@@ -76,8 +104,30 @@ knitr::include_graphics("/cloud/project/results/04_Heatmap.png")
 
 ## Shiny app
 ```{r, echo=FALSE}
-include_app("URL", height = "500px")
+include_app("https://signe-hjort.shinyapps.io/shiny/", height = "500px")
+<<<<<<< HEAD
 ```
+
+
+
+
+=======
+>>>>>>> ddfa77e41ba1f1b81caf85b91356a1bb6fe534d7
+
+
+## Project overview and structure
+```{r, echo = FALSE, out.width = "650px",}
+knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
+```
+Alt hvad vi har gjort, sadan set det ud "fra toppen".
+Hvilke steps i processen kunne vi have lavet om, diskutere ud fra.
+
+Vi har brugt R, github - sådan her ser det ud.
+
+**insert picture of structure**
+
+
+
 
 
 # Discussion

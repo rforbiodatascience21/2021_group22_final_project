@@ -17,9 +17,7 @@ my_data_counts_wide <- my_data_counts %>%
   pivot_longer(cols = -genes,
                names_to = "experiment",
                values_to = "expression") %>%
-  mutate(expression = replace(expression,
-                              expression == 0,
-                              0.000001)) %>%
+  mutate(expression = case_when(expression == 0 ~ 0.00001)) %>%
   pivot_wider(names_from = "genes",
               values_from = "expression")
 
