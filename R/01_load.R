@@ -1,15 +1,13 @@
 # Clear workspace ---------------------------------------------------------
 rm(list = ls())
 
-
 # Load libraries ----------------------------------------------------------
 library("tidyverse")
 library("readxl")
 
-
 # Load data ---------------------------------------------------------------
-my_data_raw_counts <- read_csv("data/_raw/counts.csv")
-my_data_raw_samples <- read_csv("data/_raw/samples.csv")
+my_data_raw_counts <- read_csv(file = "data/_raw/counts.csv")
+my_data_raw_samples <- read_csv(file ="data/_raw/samples.csv")
 
 
 # Write data
