@@ -13,7 +13,7 @@ top_genes_wide_to_long <- function(data, num_genes){
 
 # Same as above but takes bottom n (underexpressed) genes
 bottom_genes_wide_to_long <- function(data, num_genes){
-  data_sorted_long <- data_sorted %>%
+  data_sorted_long <- data %>%
     select(-(3:last_col(num_genes))) %>%
     pivot_longer(!c(treatment, time),
                  names_to = "gene",
