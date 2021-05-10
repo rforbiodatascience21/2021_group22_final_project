@@ -2,7 +2,8 @@
 Exam project of group 22 in the course R for Bio Data Science (22100).
 
 ## Repository overview
-![]("/cloud/project/results/flowchart.png")
+
+![](./results/flowchart.png)
 
 ## Description
 This project analyses proteomics data from a study of the effects of SARS-Cov-2 infection on host cells. The aim is to perform a full, tidy data analysis of the proteomics data.
