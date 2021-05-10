@@ -173,3 +173,6 @@ include_graphics("/cloud/project/results/flowchart.png")
 include_app("https://signe-hjort.shinyapps.io/shiny/", height = "500px")
 ```
 
+## References
+Bojkova, D., Klann, K., Koch, B. *et al.* Proteomics of SARS-CoV-2-infected host cells reveals therapy targets. Nature 583, 469–472 (2020).
+
