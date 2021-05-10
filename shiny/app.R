@@ -5,7 +5,6 @@ library("shinythemes")
 library("patchwork")
 
 setwd("/cloud/project/shiny")
-source(file = "99_functions.R")
 
 # Load data ---------------------------------------------------------------
 data_tab1 <- read_tsv("05_individual_times_ttest_and_data.tsv")
@@ -88,18 +87,31 @@ server <- function(input, output) {
   
   #tab2 -----
   # data for top plot
-  data_sorted_long <- reactive(
-    top_genes_wide_to_long(data_tab2, input$numGenes)
+  data_sorted_long <- reactive(data_tab2 %>%
+                                 select(1:(input$numGenes+2)) %>%
+                                 pivot_longer(-c(treatment, time),
+                                            names_to = "gene",
+                                            values_to = "count")
   )
-  order_names <- reactive(
-    top_gene_order(data_sorted_long(), input$numGenes)
+  order_names <- reactive(data_sorted_long() %>%
+                            ungroup %>%
+                            slice_head(n=input$numGenes) %>%
+                            pull(gene) %>%
+                            factor
   )
+  
   # data for bottom plot
-  data_sorted_long_bottom <- reactive(
-    bottom_genes_wide_to_long(data_tab2, input$numGenes2)
+  data_sorted_long_bottom <- reactive(data_tab2 %>%
+                                        select(-c(3:last_col(input$numGenes2))) %>%
+                                        pivot_longer(-c(treatment, time),
+                                                     names_to = "gene",
+                                                     values_to = "count")
   )
-  order_names_bottom <- reactive(
-    top_gene_order(data_sorted_long_bottom(), input$numGenes2)
+  order_names_bottom <- reactive(data_sorted_long_bottom() %>%
+                                   ungroup %>%
+                                   slice_head(n=input$numGenes2) %>%
+                                   pull(gene) %>%
+                                   factor
   )
   
   # tab2 plot1 overexpressed genes
