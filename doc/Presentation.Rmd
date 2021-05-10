@@ -160,6 +160,14 @@ include_graphics("/cloud/project/results/flowchart.png")
 ## Results
 
 - A lot of the upregulated genes are in the corona genome
-- Good sanity check 
+- Good sanity check but not the most interesting finding
+- Further research into the **host DE-genes**
 
+## Shiny app 
 
+- Shiny app gives a good, quick overview of protein development
+- More samples would make take-aways more certain
+
+## Workflow and methods
+
+- 
