@@ -140,22 +140,22 @@ top_exp_plot <- ggplot(data = data_sorted_long_top8,
   scale_y_log10() +
   theme_minimal() +
   ylab("count") +
-  scale_x_discrete(limits=c(2, 6, 10, 24)) +
+  scale_x_discrete(limits = c(2, 6, 10, 24)) +
   scale_alpha(guide = 'none') +
   scale_size(guide = 'none') +
   ggtitle("Top 8 overexpressed genes in (virus, 24h)") +
   geom_line(aes(color = genes)) +
-  geom_text_repel(aes(label=ifelse(time==24, 
-                                   genes, 
-                                   '')),
-                  hjust=2,
-                  size=2.6,
-                  xlim=c(24, 30)) +
-  guides(color=FALSE) +
-  theme(legend.position=c(0.1,0.9),
-        legend.background = element_rect,
-        plot.margin=unit(c(10,100,10,10), "points")) +
-  coord_cartesian(clip="off")
+  geom_text_repel(aes(label = if_else(time == 24, 
+                                   genes, '')),
+                  hjust = 2,
+                  size = 2.6,
+                  xlim = c(24, 30)) +
+  guides(color = FALSE) +
+  theme(legend.position = c(0.1,0.9),
+        legend.background = element_rect(),
+        plot.margin = unit(c(10, 100, 10, 10), 
+                           "points")) +
+  coord_cartesian(clip = "off")
 
 # Plot bottom
 bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
@@ -172,18 +172,17 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
   scale_size(guide = 'none') +
   ggtitle("Bottom 8 underexpressed genes in (virus, 24h)") +
   geom_line(aes(color = genes)) +
-  geom_text_repel(aes(label=ifelse(time==24, 
-                                   genes, 
-                                   '')),
-                  hjust=2,
-                  size=2.6,
-                  xlim=c(24, 30)) +
-  guides(color=FALSE) +
-  theme(legend.position=c(0.1,0.1),
+  geom_text_repel(aes(label = if_else(time == 24, 
+                                   genes, '')),
+                  hjust = 2,
+                  size = 2.6,
+                  xlim = c(24, 30)) +
+  guides(color = FALSE) +
+  theme(legend.position = c(0.1, 0.1),
         legend.background = element_rect(),
-        plot.margin=unit(c(10,100,10,10), 
+        plot.margin=unit(c(10, 100, 10, 10), 
                          "points")) +
-  coord_cartesian(clip="off")
+  coord_cartesian(clip = "off")
 
 # Combine top and bottom
 top_bottom <- top_exp_plot / bottom_exp_plot
