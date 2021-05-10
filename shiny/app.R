@@ -121,7 +121,6 @@ server <- function(input, output) {
                                        hjust=0.4,
                                        size=10)) +
       xlab("Genes") +
-      ylab(if_else(input$logScale, "log(count)", "count")) +
       {if(input$logScale)scale_y_log10()} +
       guides(size=FALSE, alpha=FALSE) +
       labs(title = "Top Genes",
@@ -144,7 +143,6 @@ server <- function(input, output) {
                                        hjust=0.4,
                                        size=10)) +
       xlab("Genes") +
-      ylab(if_else(input$logScale, "log(count)", "count")) +
       {if(input$logScale)scale_y_log10()} +
       guides(size=FALSE, alpha=FALSE) +
       labs(title = "Bottom Genes",

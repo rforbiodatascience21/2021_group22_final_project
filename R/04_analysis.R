@@ -11,9 +11,9 @@ library("viridis")
 
 
 # Load data ---------------------------------------------------------------
-data_mean_over_replicates <- read_tsv("data/03_data_normalized_count_mean_over_replicates.tsv")
+data_mean_over_replicates <- read_tsv(file = "data/03_data_normalized_count_mean_over_replicates.tsv")
 data_log2 <- read_tsv(file = "data/03_data_logFC_for_time.tsv")
-data_PCA_kmeans <- read_tsv("data/03_data_normalized_counts.tsv") 
+data_PCA_kmeans <- read_tsv(file = "data/03_data_normalized_counts.tsv") 
 
 # Heat map ----------------------------------------------------------
 data_normalized_long <- data_mean_over_replicates %>%
@@ -107,7 +107,7 @@ top_20_genes <- ggplot(data = data_sorted_long,
                                    vjust = -0.6,
                                    hjust = 0.4)) +
   xlab("Top genes (by differential expression)") +
-  ylab("log(count)") +
+  ylab("count") +
   scale_y_log10()
 
 # Now get just the top 8, as well as the bottom 8 (underexpressed)
@@ -132,7 +132,7 @@ top_exp_plot <- ggplot(data = data_sorted_long_top8,
              alpha = 0.5) +
   scale_y_log10() +
   theme_minimal() +
-  ylab("log(count)") +
+  ylab("count") +
   scale_x_discrete(limits=c(2, 6, 10, 24)) +
   
   scale_alpha(guide = 'none') +
@@ -162,7 +162,7 @@ bottom_exp_plot <- ggplot(data = data_sorted_long_bottom8,
              alpha = 0.5) +
   scale_y_log10() +
   theme_minimal() +
-  ylab("log(count)") +
+  ylab("count") +
   scale_x_discrete(limits=c(2, 6, 10, 24)) +
   
   scale_alpha(guide = 'none') +
@@ -300,6 +300,15 @@ ggsave(path = "results",
        width = 11,
        height = 10,
        plot = top_bottom)
+
+ggsave(path = "results",
+       filename = "04_top_8_over_time.png",
+       plot = top_exp_plot)
+
+ggsave(path = "results",
+       filename = "04_bottom_8_over_time.png",
+       plot = bottom_exp_plot)
+
 
 # Save sorted means
 write_tsv(x = sorted_means_wide,

@@ -26,73 +26,115 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 ## Project Aim
+
+
+
 *Aim: To carry out tidy data analysis of proteomics data, and communicate the findings to non-bioinformaticians in a way that enables them to get information about their genes of choice.*
 
 
 # Materials
 
 ## Project data
-- Data obtained from Bojkova *et al.*.
+
+- Data obtained from Bojkova *et al.*
 - Infection profile of SARS-CoV-2 using a human cell-culture model.
-  - Infection or mock-infection of Caco-2 (colon epithilial carcinoma cells)
----
-- Protein expression at four different time points after infection.
+  - Infection (**Corona**) or **mock**-infection of **Caco-2** (colon epithilial carcinoma cells)
+
+
+## Project Data
+
+- Protein expression at **four different time** points.
+- For each time point we have **triplicates**
+- Cells lysed and lysate fed into **LC-MS/MS** to generate **protein counts**. 
+
+
+## Project Data
 - Investigate genes and pathways that are altered during infection.
-- Tandem MS generated protein counts
-- Dataset consisting of two files to be joined: Gene counts and sample information.  
+- Dataset consisting of two files to be joined and cleaned:
+  - **Gene counts** and **sample meta-information**.  
 
 
 # Methods
 
+## Methods
+
+- Everything done in **Tidyverse** R. 
+- Done through **Github** to emphasize project collaboration
+
 ## Project overview
-```{r}
+
+```{r, echo = FALSE, out.width = "800px"}
 include_graphics("/cloud/project/results/flowchart.png")
 ```
 
+## Handling zeros
+
+- Replace with a **small value**. 
+- An inherent problem for -omics and when handling compositional data in general.
+
 
 ## Data augmentation
-- Normalize mean within each group of replicates.
-- Mean of replicates
-- Log2 fold change between control and infected samples
-- Output saved in three files
 
-## heatmap
-## top expression
-## PCA
-## Kmeans
+- After cleaning data was **normalized**
+- Normalization is due to different samplesizes
+- **FPKM** equivalent **not feasible**
+  - **Big genes** are not necessarily translated more 
+- On data frame iskept that has **ALL** the replicate information
 
+## Data augmentation
 
-
-
+- We calculated **means** for **conditions** over **replicates**. 
+- Since this is **loss** of information we saved new data tibble
 
 
+## Data augmentation
 
-## Analysis
-
-### Log2 fold change
-- Log2 fold change
-- Top and bottom differentially expressed genes
-
-- Maybe also some focus on why we chose to do so many different scripts for the plots
+- We used the triplicate means to calculate a **Log fold change**
+- Log fold change was calculated between **treatment** at the different **timepoints**
+- Saved a **new data frame**
 
 
+## Exploratory Analysis
+
+- **PCA** was performed to check for groupings in the normalized **count** data
+- K-means to see if any particular **grouping** showed up
+- A **heatmap** was also constructed to look for gene clusters with similar expression
+
+
+## Exploratory Analysis
+
+- The **LogFC** the top 20 and top 8 **DE** genes were found
 
 
 ## Modelling
 
+- **Linear models** were used to test:
+  - Does **logFC** of genes change significantly **over time**
+  - Do we see significant **differences** between **Counts** at individual **time points**
+
 
 # Results
-## PCA
-```{r, echo = FALSE, out.width = "1000px",}
-#knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
-```
----
 
 ## Heatmap
-```{r, echo = FALSE, out.width = "1000px",}
+```{r, echo = FALSE, out.width = "1000px"}
 knitr::include_graphics("/cloud/project/results/04_Heatmap.png")
 ```
 
+## PCA
+```{r, echo = FALSE, out.width = "1000px"}
+knitr::include_graphics("/cloud/project/results/04_PCA_plot.png")
+```
+
+## K-means on PCA
+```{r, echo = FALSE, out.width = "1000px"}
+knitr::include_graphics("/cloud/project/results/04_Kmeans_plot.png")
+```
+
+## Top DE-genes
+
+```{r, echo = FALSE, out.height = "600px"}
+knitr::include_graphics("/cloud/project/results/04_top_and_bottom_8_over_time.png")
+```
 
 
 ## Shiny app
@@ -102,7 +144,7 @@ include_app("https://signe-hjort.shinyapps.io/shiny/", height = "500px")
 
 
 ## Project overview and structure
-```{r}
+```{r, echo = FALSE, out.width = "800px"}
 include_graphics("/cloud/project/results/flowchart.png")
 ```
 
