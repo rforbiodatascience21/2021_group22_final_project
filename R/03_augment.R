@@ -27,7 +27,7 @@ data_normalized <- data_clean %>%
   pivot_wider(names_from = genes, 
               values_from = normalized_counts)
 
-# Calculate means of the normalized data
+# Calculate means of replicates of the normalized data
 data_normalized_mean_across_replicates <- data_normalized %>% 
   pivot_longer(cols = c(-experiment,
                         -treatment,
