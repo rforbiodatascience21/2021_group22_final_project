@@ -78,29 +78,31 @@ log2_diff <- data_log2_diff_long %>%
   pivot_wider(names_from = "genes",
               values_from = "log2_diff")
 
+
+##### MOVED TO ANALYSIS #####
 # Sort the genes by log2_diff and then time (high to low)
-sorted_genes <- data_log2_diff_long %>%
-  arrange(desc(log2_diff)) %>%
-  arrange(desc(time)) %>%
-  select(genes, time)
+#sorted_genes <- data_log2_diff_long %>%
+  #arrange(desc(log2_diff)) %>%
+  #arrange(desc(time)) %>%
+  #select(genes, time)
 
 # Change the dataframe with means to fit the long format
-data_mean_long <- data_mean %>% 
-  pivot_longer(cols = c(-time,
-                        -treatment),
-               names_to = "genes",
-               values_to = "counts") 
+#data_mean_long <- data_mean %>% 
+  #pivot_longer(cols = c(-time,
+                        #-treatment),
+               #names_to = "genes",
+               #values_to = "counts") 
 
 # Change to order of the data mean long after highest logfold expression
-sorted_means <- sorted_genes %>%
-  full_join(x = .,
-            y = data_mean_long,
-            by = c("genes", "time"))
+#sorted_means <- sorted_genes %>%
+  #full_join(x = .,
+            #y = data_mean_long,
+            #by = c("genes", "time"))
 
 # Convert the sorted means back to tidy data format
-sorted_means_wide <- sorted_means %>%
-  pivot_wider(names_from = "genes",
-              values_from = "counts")
+#sorted_means_wide <- sorted_means %>%
+  #pivot_wider(names_from = "genes",
+              #values_from = "counts")
 
 
 # Write data --------------------------------------------------------------
@@ -110,11 +112,11 @@ write_tsv(x = data_normalized,
 write_tsv(x = data_normalized_mean_across_replicates,
           file = "data/03_data_normalized_count_mean_over_replicates.tsv")
 
-write_tsv(x = data_log2,
-          file = "data/03_data_log2_of_replicate_means.tsv")
+#write_tsv(x = data_log2,
+          #file = "data/03_data_log2_of_replicate_means.tsv")
 
-write_tsv(x = sorted_means_wide,
-          file = "data/03_genes_sorted_by_highest_logFC_per_time.tsv")
+#write_tsv(x = sorted_means_wide,
+          #file = "data/03_genes_sorted_by_highest_logFC_per_time.tsv")
 
 write_tsv(x = log2_diff,
           file = "data/03_data_logFC_for_time.tsv")
