@@ -4,7 +4,6 @@ library("shiny")
 library("shinythemes")
 library("patchwork")
 
-setwd("/cloud/project/shiny")
 
 # Load data ---------------------------------------------------------------
 data_tab1 <- read_tsv("05_individual_times_ttest_and_data.tsv")
