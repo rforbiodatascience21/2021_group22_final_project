@@ -93,6 +93,7 @@ server <- function(input, output) {
                                             names_to = "gene",
                                             values_to = "count")
   )
+  # plotting order for top plot
   order_names <- reactive(data_sorted_long() %>%
                             ungroup %>%
                             slice_head(n=input$numGenes) %>%
@@ -107,6 +108,7 @@ server <- function(input, output) {
                                                      names_to = "gene",
                                                      values_to = "count")
   )
+  # plotting order for bottom plot
   order_names_bottom <- reactive(data_sorted_long_bottom() %>%
                                    ungroup %>%
                                    slice_head(n=input$numGenes2) %>%
